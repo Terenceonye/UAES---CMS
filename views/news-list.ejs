@@ -1,0 +1,455 @@
+<%- include('partials/header-sidebar') %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+
+
+    <style>
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .news-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .news-card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .news-card p {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .images-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+
+        .images-container img {
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+        }
+
+        small {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: auto;
+        }
+
+        .action-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .action-buttons a,
+        .action-buttons button {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .edit-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .status-toggle input[type="checkbox"] {
+            display: none;
+        }
+
+        .status-toggle label {
+            position: relative;
+            display: inline-block;
+            width: 42px;
+            height: 22px;
+            background-color: #ccc;
+            border-radius: 22px;
+            cursor: pointer;
+        }
+
+        .status-toggle label::before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: white;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .status-toggle input[type="checkbox"]:checked+label {
+            background-color: #28a745;
+        }
+
+        .status-toggle input[type="checkbox"]:checked+label::before {
+            transform: translateX(20px);
+        }
+
+        .no-news {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05); */
+        }
+
+
+        .pagination .page-item.active .page-link {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            color: #fff;
+        }
+    </style>
+
+    <div class="page-wrapper" id="toTop">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>View All News</h4>
+                    <h6>All news items</h6>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="container">
+                        <h1>All News</h1>
+
+                        <% if (newsList.length===0) { %>
+
+                            <div class="alert alert-info d-flex justify-content-between align-items-center p-4 no-news"
+                                role="alert">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-circle-info fa-2x me-3 text-primary"></i>
+                                    <div class="text-dark">
+                                        <h5 class="mb-1">No news found</h5>
+                                        <p class="mb-0">Upload your first news item to get started.</p>
+                                    </div>
+                                </div>
+                                <a href="/add-news" class="btn btn-primary">Upload News</a>
+                            </div>
+
+                            <% } else { %>
+                                <div class="news-grid">
+                                    <% newsList.forEach(news=> { %>
+                                        <div class="news-card">
+                                            <h2>
+                                                <%= news.title %>
+                                            </h2>
+                                            <div>
+                                                <%- news.truncatedContent %>
+                                            </div>
+
+                                            <div class="images-container">
+                                                <% news.images.forEach(img=> { %>
+                                                    <img src="<%= img.url %>" alt="<%= img.originalName %>" />
+                                                    <% }) %>
+                                            </div>
+
+                                            <small>Posted on <%= news.createdAt.toDateString() %></small>
+
+                                            <div class="action-buttons">
+                                                <a href="/news/<%= news._id %>/edit" class="edit-btn">Edit</a>
+
+                                                <form action="/news/<%= news._id %>/delete" method="POST"
+                                                    onsubmit="return confirm('Are you sure you want to delete this news item?')">
+                                                    <button type="submit" class="delete-btn">Delete</button>
+                                                </form>
+                                            </div>
+
+                                            <div class="status-toggle mt-2">
+                                                <span>Status:</span>
+                                                <input type="checkbox" id="toggle-<%= news._id %>" <%=news.isActive
+                                                    ? "checked" : "" %>
+                                                onchange="toggleStatus('<%= news._id %>', this.checked)">
+                                                    <label for="toggle-<%= news._id %>"></label>
+                                                    <span>
+                                                        <%= news.isActive ? 'Active' : 'Inactive' %>
+                                                    </span>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                                <% } %>
+
+
+
+
+                                    <div class="my-4">
+                                        <!-- Page Count -->
+                                        <p class="text-center text-muted mb-2">
+                                            Page <%= currentPage %> of <%= totalPages %>
+                                        </p>
+
+                                        <!-- Smart Pagination -->
+                                        <% if (totalPages> 1) { %>
+                                            <nav aria-label="News pagination">
+                                                <ul class="pagination justify-content-center">
+
+                                                    <!-- Prev Button -->
+                                                    <% if (currentPage> 1) { %>
+                                                        <li class="page-item">
+                                                            <a class="page-link"
+                                                                href="/news-list?page=<%= currentPage - 1 %>">&laquo;
+                                                                Prev</a>
+                                                        </li>
+                                                        <% } else { %>
+                                                            <li class="page-item disabled">
+                                                                <span class="page-link">&laquo; Prev</span>
+                                                            </li>
+                                                            <% } %>
+
+                                                                <!-- First Page & Left Dots -->
+                                                                <% if (currentPage> 3) { %>
+                                                                    <li class="page-item">
+                                                                        <a class="page-link"
+                                                                            href="/news-list?page=1">1</a>
+                                                                    </li>
+                                                                    <% if (currentPage> 4) { %>
+                                                                        <li class="page-item disabled">
+                                                                            <span class="page-link">...</span>
+                                                                        </li>
+                                                                        <% } %>
+                                                                            <% } %>
+
+                                                                                <!-- Pages Around Current -->
+                                                                                <% for (let i=currentPage - 2; i
+                                                                                    <=currentPage + 2; i++) { if (i> 0
+                                                                                    && i <= totalPages) { %>
+                                                                                        <li
+                                                                                            class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                                                                            <a class="page-link"
+                                                                                                href="/news-list?page=<%= i %>">
+                                                                                                <%= i %>
+                                                                                            </a>
+                                                                                        </li>
+                                                                                        <% } } %>
+
+                                                                                            <!-- Right Dots & Last Page -->
+                                                                                            <% if (currentPage <
+                                                                                                totalPages - 2) { %>
+                                                                                                <% if (currentPage <
+                                                                                                    totalPages - 3) { %>
+                                                                                                    <li
+                                                                                                        class="page-item disabled">
+                                                                                                        <span
+                                                                                                            class="page-link">...</span>
+                                                                                                    </li>
+                                                                                                    <% } %>
+                                                                                                        <li
+                                                                                                            class="page-item">
+                                                                                                            <a class="page-link"
+                                                                                                                href="/news-list?page=<%= totalPages %>">
+                                                                                                                <%= totalPages
+                                                                                                                    %>
+                                                                                                            </a>
+                                                                                                        </li>
+                                                                                                        <% } %>
+
+                                                                                                            <!-- Next Button -->
+                                                                                                            <% if
+                                                                                                                (currentPage
+                                                                                                                <
+                                                                                                                totalPages)
+                                                                                                                { %>
+                                                                                                                <li
+                                                                                                                    class="page-item">
+                                                                                                                    <a class="page-link"
+                                                                                                                        href="/news-list?page=<%= currentPage + 1 %>">Next
+                                                                                                                        &raquo;</a>
+                                                                                                                </li>
+                                                                                                                <% } else
+                                                                                                                    { %>
+                                                                                                                    <li
+                                                                                                                        class="page-item disabled">
+                                                                                                                        <span
+                                                                                                                            class="page-link">Next
+                                                                                                                            &raquo;</span>
+                                                                                                                    </li>
+                                                                                                                    <% }
+                                                                                                                        %>
+
+                                                </ul>
+                                            </nav>
+                                            <% } %>
+                                    </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    </div>
+
+
+    <%- include("partials/footer") %>
+
+
+        <!-- Alert Container -->
+        <div id="alert-container" style="position: fixed; top: 1rem; right: 1rem; z-index: 1050;"></div>
+
+
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                background-color: #f8f9fa;
+            }
+
+            .dashboard-header {
+                margin-bottom: 2rem;
+            }
+
+            .alert {
+                padding: 0.75rem 1.25rem;
+                margin-bottom: 1rem;
+                border-radius: 0.25rem;
+                box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+                font-weight: 600;
+                min-width: 250px;
+                color: #fff;
+                cursor: pointer;
+                opacity: 0.95;
+                transition: opacity 0.3s ease;
+            }
+
+            .alert-success {
+                background-color: #28a745;
+            }
+
+            .alert-error {
+                background-color: #dc3545;
+            }
+
+            .alert:hover {
+                opacity: 0.7;
+            }
+
+            .dash-link {
+                color: #fff;
+                cursor: pointer;
+                text-decoration: none;
+            }
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script>
+            function showAlert(message, type = "success", duration = 5000) {
+                const container = document.getElementById("alert-container");
+                if (!container) return;
+
+                const alert = document.createElement("div");
+                alert.className = `alert alert-${type === "error" ? "error" : "success"}`;
+                alert.textContent = message;
+
+                alert.addEventListener("click", () => {
+                    alert.style.opacity = "0";
+                    setTimeout(() => alert.remove(), 300);
+                });
+
+                container.appendChild(alert);
+
+                setTimeout(() => {
+                    alert.style.opacity = "0";
+                    setTimeout(() => alert.remove(), 300);
+                }, duration);
+            }
+
+            window.addEventListener("DOMContentLoaded", () => {
+    <% if (success_msg && success_msg.length > 0) { %>
+                    showAlert("<%= success_msg %>", "success");
+    <% } %>
+    <% if (error_msg && error_msg.length > 0) { %>
+                    showAlert("<%= error_msg %>", "error");
+    <% } %>
+  });
+        </script>
+
+
+
+
+
+        <script>
+            async function toggleStatus(id, isActive) {
+                try {
+                    const res = await fetch(`/api/news/${id}/status`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ isActive })
+                    });
+                    if (res.ok) {
+                        showAlert(`News marked as ${isActive ? 'Active' : 'Inactive'}`);
+                        // location.reload();
+                    } else {
+                        showAlert('Failed to update status.', "danger");
+                    }
+                } catch (error) {
+                    console.error('Error updating status:', error);
+                    shorAlert('Server error.');
+                }
+            }
+        </script>
+        </body>
+
+        </html>

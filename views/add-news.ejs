@@ -1,0 +1,323 @@
+<%- include('partials/header-sidebar') %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Quill Editor CDN -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+    <style>
+        /* body {
+            background: #e9ecef;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        } */
+
+        /* .upload-wrapper {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 3rem;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        } */
+
+        .form-label {
+            font-weight: 600;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 0.5rem;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+        .img-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .img-preview img {
+            height: 100px;
+            width: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+            transition: transform 0.2s ease;
+        }
+
+        .img-preview img:hover {
+            transform: scale(1.05);
+        }
+
+        h3.title-heading {
+            font-weight: 700;
+            color: #343a40;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary {
+            font-weight: 600;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+
+        .btn-primary i {
+            font-size: 1rem;
+        }
+    </style>
+
+    <div class="page-wrapper" id="toTop">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Add News</h4>
+                    <h6>Add new items</h6>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="upload-wrapper">
+                        <h3 class="title-heading">
+                            <i class="bi bi-newspaper  text-primary me-3 "></i>Upload News Article
+                        </h3>
+
+                        <!-- Success Alert -->
+                        <% if (success_msg && success_msg.length> 0) { %>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fa-solid fa-circle-check me-2"></i>
+                                <%= success_msg[0] %>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                            <% } %>
+
+                                <!-- Error Alert -->
+                                <% if (error_msg && error_msg.length> 0) { %>
+                                    <div class="alert alert-danger alert-dismissible fade show text-dark" role="alert">
+                                        <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                                        <%= error_msg[0] %>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <% } %>
+
+
+                                        <form id="newsForm" action="/add-news" method="POST"
+                                            enctype="multipart/form-data">
+                                            <!-- Title -->
+                                            <div class="mb-4">
+                                                <label for="title" class="form-label">News Title</label>
+                                                <input type="text" class="form-control" id="title" name="newsTitle"
+                                                    placeholder="Enter news title" required
+                                                    value="<%= formData?.newsTitle || '' %>">
+                                            </div>
+
+                                            <!-- Content (Quill Editor) -->
+                                            <div class="mb-4">
+                                                <label for="editor" class="form-label">Content</label>
+                                                <div id="editor" style="height: 300px;">
+                                                    <%= formData?.content || '' %>
+                                                </div>
+                                                <input type="hidden" name="NewsContent" id="NewsContent">
+                                            </div>
+
+
+                                            <!-- Tag -->
+                                            <div class="mb-4">
+                                                <label for="tag" class="form-label">News Tag</label>
+                                                <input type="text" class="form-control" id="tag" name="newsTag"
+                                                    placeholder="Enter news tag" value="<%= formData?.tag || '' %>">
+                                            </div>
+
+                                            <!-- Images -->
+                                            <div class="mb-4">
+                                                <label for="images" class="form-label">Upload News Cover Image <span
+                                                        class="text-danger small">(JPG, PNG or JPEG Only, File size must
+                                                        not
+                                                        be
+                                                        greater than 250KB)</span></label>
+                                                <input type="file" class="form-control" id="images" name="upload"
+                                                    accept="image/jpeg, image/png, image/jpg" required>
+                                                <div class="img-preview" id="previewContainer"></div>
+                                            </div>
+
+                                            <!-- Status -->
+                                            <div class="mb-4">
+                                                <label class="form-label">Status</label>
+                                                <select class="form-select" name="isActive" required>
+                                                    <option value="true" <%=formData?.isActive===true ? 'selected' : ''
+                                                        %>
+                                                        >Active</option>
+                                                    <option value="false" <%=formData?.isActive===false ? 'selected'
+                                                        : '' %>
+                                                        >Inactive</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Submit -->
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                <i class="fa fa-upload me-2"></i>Submit News
+                                            </button>
+                                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <%- include("partials/footer") %>
+        <script>
+            // Initialize Quill
+            const quill = new Quill('#editor', {
+                theme: 'snow',
+                placeholder: 'Write the full news content here...',
+                modules: {
+                    toolbar: [
+                        [{ header: [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        ['blockquote', 'code-block'],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                }
+            });
+
+            // On form submit, put HTML into hidden input
+            document.getElementById('newsForm').addEventListener('submit', function () {
+                document.getElementById('NewsContent').value = quill.root.innerHTML;
+            });
+        </script>
+
+
+        <!-- Alert Container -->
+        <div id="alert-container" style="position: fixed; top: 1rem; right: 1rem; z-index: 1050;"></div>
+
+        <!-- Styles -->
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                background-color: #f8f9fa;
+            }
+
+            .dashboard-header {
+                margin-bottom: 2rem;
+            }
+
+            .alert {
+                padding: 0.75rem 1.25rem;
+                margin-bottom: 1rem;
+                border-radius: 0.25rem;
+                box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+                font-weight: 600;
+                min-width: 250px;
+                color: #fff;
+                cursor: pointer;
+                opacity: 0.95;
+                transition: opacity 0.3s ease;
+            }
+
+            .alert-success {
+                background-color: #28a745;
+            }
+
+            .alert-error {
+                background-color: #dc3545;
+            }
+
+            .alert:hover {
+                opacity: 0.7;
+            }
+
+            .dash-link {
+                color: #fff;
+                cursor: pointer;
+                text-decoration: none;
+            }
+        </style>
+
+        <!-- Scripts -->
+        <script>
+            function showAlert(message, type = "success", duration = 5000) {
+                const container = document.getElementById("alert-container");
+                if (!container) return;
+
+                const alert = document.createElement("div");
+                alert.className = `alert alert-${type === "error" ? "error" : "success"}`;
+                alert.textContent = message;
+
+                alert.addEventListener("click", () => {
+                    alert.style.opacity = "0";
+                    setTimeout(() => alert.remove(), 300);
+                });
+
+                container.appendChild(alert);
+
+                setTimeout(() => {
+                    alert.style.opacity = "0";
+                    setTimeout(() => alert.remove(), 300);
+                }, duration);
+            }
+
+            window.addEventListener("DOMContentLoaded", () => {
+    <% if (success_msg && success_msg.length > 0) { %>
+                    showAlert("<%= success_msg %>", "success");
+    <% } %>
+    <% if (error_msg && error_msg.length > 0) { %>
+                    showAlert("<%= error_msg %>", "error");
+    <% } %>
+  });
+        </script>
+
+
+
+        <!-- Image Preview Script and dimension checker -->
+        <script>
+            document.getElementById('images').addEventListener('change', function () {
+                const container = document.getElementById('previewContainer');
+                container.innerHTML = ''; // Clear previous previews
+
+                const files = Array.from(this.files);
+
+                files.forEach(file => {
+                    if (!file.type.startsWith('image/')) return;
+
+                    const img = new Image();
+                    img.src = URL.createObjectURL(file);
+
+                    img.onload = () => {
+
+                        const previewImg = document.createElement('img');
+                        previewImg.src = img.src;
+                        previewImg.style.maxWidth = '200px'; // optional styling
+                        previewImg.style.margin = '0 10px 10px 0';
+                        container.appendChild(previewImg);
+
+
+                        URL.revokeObjectURL(img.src);
+                    };
+                });
+            });
+        </script>
+        </body>
+
+        </html>

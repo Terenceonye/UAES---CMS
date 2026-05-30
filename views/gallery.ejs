@@ -1,0 +1,370 @@
+<%- include("websitepartials/header") %>
+<main class="main">
+  <!-- Page Title -->
+  <div
+    class="page-title dark-background"
+    style="
+      background-image: url(website-assets/img/gallery/Dr-Basilia-Igbokwe3.jpg);
+    "
+  >
+    <div class="container position-relative">
+      <h1>Gallery</h1>
+      <p>
+        Discover the vibrant learning environment, modern infrastructure, and
+        dynamic spaces that shape life at University of Innovation, Science and
+        Technology, Omuma.
+      </p>
+
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li class="current">Gallery</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <!-- End Page Title -->
+
+  <!-- Campus Facilities Section -->
+  <section id="campus-facilities" class="campus-facilities section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <!-- Introduction -->
+      <div class="intro-row">
+        <div class="row align-items-center">
+          <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
+            <div class="intro-content">
+              <h2 class="fw-bold">Explore Our Campus in Pictures</h2>
+              <p class="lead">
+                A vibrant and inspiring environment captured through the lens
+              </p>
+              <p>
+                From lecture halls to lush green spaces, the University of
+                Innovation, Science and Technology, Omuma offers a dynamic
+                setting where education and culture thrive. Browse our gallery
+                to witness the energy and spirit that define our community.
+              </p>
+              <div class="stats-container">
+                <div class="stat-item">
+                  <span class="stat-number">170+</span>
+                  <span class="stat-label">Photos</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number">30+</span>
+                  <span class="stat-label">Campus Locations</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number">10+</span>
+                  <span class="stat-label">Student Activities</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
+            <div class="intro-image-container">
+              <div class="intro-image main-image">
+                <img
+                  src="website-assets/img/school-images/campus1.jpg"
+                  alt="Main Campus"
+                  class="img-fluid rounded"
+                />
+              </div>
+              <div class="intro-image accent-image">
+                <img
+                  src="website-assets/img/school-images/campus2.jpg"
+                  alt="Campus Feature"
+                  class="img-fluid rounded"
+                />
+              </div>
+              <div class="tour-button">
+                <a
+                  href="https://www.youtube.com/@OfficialUISTO"
+                  target="_blank"
+                  class="btn-tour"
+                  ><i class="bi bi-play-circle-fill"></i> Virtual Tour</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+      <style>
+        .modal-body img {
+          max-height: 70vh;
+          object-fit: contain;
+        }
+
+        .modal-content {
+          border-radius: 10px;
+        }
+
+        .modal-footer {
+          background-color: #111;
+          padding: 1rem 1.5rem;
+        }
+
+        .btn-danger {
+          min-width: 100px;
+        }
+
+        .gallery-item img {
+          cursor: pointer;
+        }
+      </style>
+
+      <!-- Campus Gallery -->
+      <div
+        class="campus-gallery-section"
+        data-aos="fade-up"
+        data-aos-delay="300"
+      >
+        <div class="gallery-grid" id="campusGalleryGrid">
+          <!-- <div class="gallery-item large" data-aos="zoom-in" data-aos-delay="100">
+              <img src="website-assets/img/gallery/1659087141Copy-of-UISTO-NEWS-Rector-Officiate-2021-2022-Matric-II.jpg"
+                alt="Library" class="img-fluid" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>Rector Officiating</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
+              <img src="website-assets/img/gallery/1683031398UISTO-Campus-Egbema1.jpg" alt="Student Center"
+                class="img-fluid" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>Campus</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
+              <img src="website-assets/img/gallery/Dr-Basilia-Igbokwe3.jpg" alt="Dormitory" class="img-fluid"
+                loading="lazy">
+              <div class="gallery-overlay">
+                <h4>Rector - DR. BASIL</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="400">
+              <img src="website-assets/img/gallery/Dr-Basilia-Poses-with-Appointment-Letter.jpeg" alt="Study Areas"
+                class="img-fluid" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>Appointments</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="500">
+              <img src="website-assets/img/gallery/Learning.jpg" alt="Sports Complex" class="img-fluid" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>Learning</h4>
+              </div>
+            </div> -->
+        </div>
+      </div>
+
+      <!-- Image Viewer Modal -->
+      <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content bg-dark text-white position-relative">
+            <div class="modal-body text-center p-4">
+              <img
+                id="modalImage"
+                src=""
+                alt="Gallery Image"
+                class="img-fluid rounded mb-3"
+              />
+              <h5 id="modalCaption" class="text-white"></h5>
+            </div>
+            <div class="modal-footer justify-content-between border-0">
+              <button class="btn btn-outline-light" id="prevImage">
+                <i class="bi bi-arrow-left-circle"></i> Prev
+              </button>
+              <button class="btn btn-outline-light" id="nextImage">
+                Next <i class="bi bi-arrow-right-circle"></i>
+              </button>
+              <button class="btn btn-danger ms-auto" data-bs-dismiss="modal">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gallery Pagination -->
+      <div class="text-center mt-4">
+        <nav aria-label="Gallery pagination">
+          <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+              <a class="page-link" href="#">Previous</a>
+            </li>
+            <li class="page-item active">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </section>
+  <!-- /Campus Facilities Section -->
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const modalImage = document.getElementById("modalImage");
+      const modalCaption = document.getElementById("modalCaption");
+      const modal = new bootstrap.Modal(document.getElementById("imageModal"));
+      const galleryGrid = document.getElementById("campusGalleryGrid");
+      let galleryImages = [];
+      let currentIndex = 0;
+
+      const imagesPerPage = 5;
+      let currentPage = 1;
+
+      async function fetchGalleryImages() {
+        try {
+          const res = await fetch("/api/gallery");
+          const data = await res.json();
+          if (data.success) {
+            galleryImages = data.images;
+            renderGallery();
+            renderPagination();
+          } else {
+            galleryGrid.innerHTML =
+              "<p class='text-center'>No images available.</p>";
+          }
+        } catch (err) {
+          console.error("Failed to load images", err);
+          galleryGrid.innerHTML =
+            "<p class='text-center text-danger'>Error loading images.</p>";
+        }
+      }
+
+      function renderGallery() {
+        galleryGrid.innerHTML = "";
+        const start = (currentPage - 1) * imagesPerPage;
+        const end = start + imagesPerPage;
+        const pageImages = galleryImages.slice(start, end);
+
+        pageImages.forEach((img, index) => {
+          const div = document.createElement("div");
+          div.className = "gallery-item";
+          if (index === 0) div.classList.add("large");
+
+          // AOS animation
+          div.setAttribute("data-aos", "zoom-in");
+          div.setAttribute("data-aos-delay", `${100 * (index + 1)}`);
+
+          div.innerHTML = `
+          <img src="${img.url}" alt="${img.altText}" class="img-fluid" loading="lazy">
+          <div class="gallery-overlay">
+            <h4>${img.altText}</h4>
+          </div>
+        `;
+
+          div.querySelector("img").addEventListener("click", () => {
+            currentIndex = start + index;
+            openModal(currentIndex);
+          });
+
+          galleryGrid.appendChild(div);
+        });
+
+        // Refresh AOS after DOM update
+        if (window.AOS) AOS.refresh();
+      }
+
+      function renderPagination() {
+        const totalPages = Math.ceil(galleryImages.length / imagesPerPage);
+        const paginationList = document.querySelector(".pagination");
+        paginationList.innerHTML = "";
+
+        function createPageItem(
+          page,
+          label = null,
+          isActive = false,
+          isDisabled = false
+        ) {
+          const li = document.createElement("li");
+          li.className = `page-item ${isActive ? "active" : ""} ${
+            isDisabled ? "disabled" : ""
+          }`;
+          li.innerHTML = `<a class="page-link" href="#">${label ?? page}</a>`;
+          li.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (!isDisabled && currentPage !== page) {
+              currentPage = page;
+              renderGallery();
+              renderPagination();
+            }
+          });
+          return li;
+        }
+
+        // Previous button
+        paginationList.appendChild(
+          createPageItem(currentPage - 1, "Previous", false, currentPage === 1)
+        );
+
+        // Smart pagination logic
+        const delta = 2;
+        const range = [];
+        for (
+          let i = Math.max(2, currentPage - delta);
+          i <= Math.min(totalPages - 1, currentPage + delta);
+          i++
+        ) {
+          range.push(i);
+        }
+        if (currentPage - delta > 2) range.unshift("...");
+        if (currentPage + delta < totalPages - 1) range.push("...");
+
+        const pages = [1, ...range, totalPages].filter(
+          (v, i, a) => a.indexOf(v) === i
+        );
+
+        pages.forEach((p) => {
+          if (p === "...") {
+            const li = document.createElement("li");
+            li.className = "page-item disabled";
+            li.innerHTML = `<span class="page-link">...</span>`;
+            paginationList.appendChild(li);
+          } else {
+            paginationList.appendChild(createPageItem(p, p, p === currentPage));
+          }
+        });
+
+        // Next button
+        paginationList.appendChild(
+          createPageItem(
+            currentPage + 1,
+            "Next",
+            false,
+            currentPage === totalPages
+          )
+        );
+      }
+
+      function openModal(index) {
+        const img = galleryImages[index];
+        modalImage.src = img.url;
+        modalCaption.textContent = img.altText || "";
+        currentIndex = index;
+        modal.show();
+      }
+
+      document.getElementById("prevImage").addEventListener("click", () => {
+        currentIndex =
+          (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+        openModal(currentIndex);
+      });
+
+      document.getElementById("nextImage").addEventListener("click", () => {
+        currentIndex = (currentIndex + 1) % galleryImages.length;
+        openModal(currentIndex);
+      });
+
+      fetchGalleryImages();
+    });
+  </script>
+</main>
+
+<%- include("websitepartials/footer") %>

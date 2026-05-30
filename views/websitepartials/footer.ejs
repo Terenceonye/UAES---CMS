@@ -1,0 +1,427 @@
+<footer id="footer" class="footer position-relative dark-background">
+
+    <div class="container footer-top">
+        <div class="row gy-4">
+            <div class="col-lg-4 col-md-6 footer-about ">
+                <a href="/" class=" d-flex align-items-center ">
+                    <img src="website-assets/img/logo.png" alt="UISTO logo" width="170px">
+                </a>
+                <div class="footer-contact pt-3">
+                    <p onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=Federal+Polytechnic,+Nekede', '_blank')"
+                        class="custom-clickable">
+                        Federal Polytechnic, Nekede</p>
+                    <p>P.M.B 1036 Nekede, Imo State</p>
+                    <p class="mt-3"><strong>Phone:</strong> <span onclick="window.open('tel:+2348118691549', '_blank')"
+                            class="custom-clickable">+234-8118691549</span></p>
+                    <p><strong>Email:</strong> <span onclick="window.open('mailto: registrar@UISTO.edu.ng', '_blank')"
+                            class="custom-clickable">registrar@UISTO.edu.ng</span></p>
+                </div>
+
+            </div>
+
+            <div class="col-lg-2 col-md-3 footer-links">
+                <h4>Useful Links</h4>
+                <ul>
+                    <li><a href="/mission-vision-objectives">About us</a></li>
+                    <li><a href="#featured-programs">Our Programs</a></li>
+                    <li><a href="/news">News</a></li>
+                    <li><a href="/events">Events</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-2 col-md-3 footer-links">
+                <h4>Admissions</h4>
+                <ul>
+                    <li><a href="/admission-requirements">Requirements</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-2 col-md-3 footer-links">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="https://fpn.netpro.software" target="_blank">E-Learning</a></li>
+                    <li><a href="https://fpn.netpro.software/elibrary" target="_blank">E-Library</a></li>
+                    <li><a href="javascript:void(0)" class="show-portal-modal">Student Portal</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-2 col-md-3 footer-links">
+                <h4>Socials</h4>
+                <ul>
+                    <li>
+                        <a href="javascript:void(0)"><i
+                                class="bi bi-google-play me-2 p-2 border border-1 border-secondary rounded-3"></i>Play
+                            Store</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)"><i
+                                class="bi bi-apple me-2 p-2 border border-1 border-secondary rounded-3"></i>Apple
+                            Store</a>
+                    </li>
+                </ul>
+
+
+                <div class="social-links d-flex mt-4 gap-1">
+                    <a href="https://www.instagram.com/officialUISTO/" aria-label="Instagram">
+                        <i class="bi bi-instagram p-3"></i>
+                    </a>
+
+                    <a href="https://www.linkedin.com/school/the-federal-polytechnic-nekede-owerri-imo-state/"
+                        target="_blank" aria-label="LinkedIn">
+                        <i class="bi bi-linkedin p-3"></i>
+                    </a>
+
+                    <a href="https://x.com/officialUISTO" aria-label="X">
+                        <i class="bi bi-twitter p-3"></i>
+                    </a>
+
+                    <!-- Facebook -->
+                    <a href="https://www.facebook.com/officialUISTO" target="_blank" aria-label="Facebook">
+                        <i class="bi bi-facebook p-3"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Federal Polytechnic, Nekede.</strong> <span>All Rights
+                Reserved</span></p>
+        <div class="credits">
+
+            Powered by <a href="/ict-directorate">ICT Directorate | UISTO</a>
+        </div>
+    </div>
+
+</footer>
+
+<style>
+    .chatbot-button {
+        position: fixed;
+        bottom: 65px;
+        right: 10px;
+        background-color: var(--accent-color);
+        color: #fff;
+        border-radius: 50%;
+        border: var(--nav-hover-color) solid 1px;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        z-index: 9999;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .chatbot-button:hover {
+        background-color: #003d99;
+        transform: scale(1.05);
+    }
+
+    .chatbot-button i {
+        font-size: 1.7rem;
+    }
+
+    .chat-alert {
+        display: none;
+        position: absolute;
+        bottom: 75px;
+        right: 0;
+        /* background: #ffd700; */
+        background: var(--nav-hover-color);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        animation: slideIn 0.3s ease-in-out;
+        font-weight: 500;
+    }
+
+    .chat-alert.show {
+        display: block;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(15px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes vibrate {
+        0% {
+            transform: translate(0);
+        }
+
+        20% {
+            transform: translate(-2px, 2px);
+        }
+
+        40% {
+            transform: translate(-2px, -2px);
+        }
+
+        60% {
+            transform: translate(2px, 2px);
+        }
+
+        80% {
+            transform: translate(2px, -2px);
+        }
+
+        100% {
+            transform: translate(0);
+        }
+    }
+
+    .vibrate {
+        animation: vibrate 0.4s ease;
+    }
+</style>
+
+<!-- Floating Chatbot Button -->
+<div class="chatbot-button" id="UISTO-chatbot-button" onclick="openChatbotModal()">
+    <i class="bi bi-robot"></i>
+    <div class="chat-alert" id="chat-alert">Need help? Chat with UISTO AI!</div>
+</div>
+
+<script>
+
+    // Show alert every 30 seconds
+    setInterval(() => {
+        const alertBox = document.getElementById("chat-alert");
+        alertBox.classList.add("show");
+        setTimeout(() => alertBox.classList.remove("show"), 5000);
+    }, 15000);
+
+    // Vibrate every 5 seconds
+    setInterval(() => {
+        const button = document.getElementById("UISTO-chatbot-button");
+        button.classList.remove("vibrate");
+        void button.offsetWidth; // Force reflow
+        button.classList.add("vibrate");
+    }, 5000);
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+<!-- Styles for Floating Button -->
+<style>
+    .chat-box {
+        height: 300px;
+        overflow-y: auto;
+        background: #f9f9f9;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .message {
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 10px;
+        max-width: 80%;
+        animation: fadeIn 0.3s ease-in-out;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .user-message {
+        background-color: #D1634A;
+        color: white;
+        margin-left: auto;
+    }
+
+    #user-input:focus {
+        outline: none;
+        box-shadow: none;
+        border-color: #ccc;
+        /* Optional: use a subtle border */
+    }
+
+    .bot-message {
+        background-color: #e2e2e2;
+        color: black;
+        margin-right: auto;
+    }
+
+    .thinking::after {
+        content: "";
+        display: inline-block;
+        margin-left: 5px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: gray;
+        animation: bubble 1.5s infinite ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes bubble {
+
+        0%,
+        100% {
+            transform: scale(0.8);
+            opacity: 0.6;
+        }
+
+        50% {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+    }
+
+    .message-head {
+        background-color: var(--accent-color) !important;
+        color: white !important;
+    }
+</style>
+
+<!-- Chatbot Modal -->
+<div class="modal fade" id="chatbotModal" tabindex="-1" aria-labelledby="chatbotModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header message-head text-white">
+                <h5 class="modal-title" id="chatbotModalLabel" style="color: white;"><i
+                        class="fas fa-robot me-2"></i>UISTO AI
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    style="color: white !important;"></button>
+            </div>
+            <div class="modal-body">
+                <div class="chat-container w-100">
+                    <div class="chat-box" id="chat-box"></div>
+                    <form id="chat-form">
+                        <div class="input-group">
+                            <input type="text" id="user-input" class="form-control"
+                                placeholder="Type your question..." />
+                            <button type="submit" id="ask-btn" class="btn btn-primary"
+                                style="background-color: var(--accent-color);">Ask</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- JS -->
+<script>
+    function openChatbotModal() {
+        const modal = new bootstrap.Modal(document.getElementById('chatbotModal'));
+        modal.show();
+        setTimeout(() => document.getElementById('user-input').focus(), 500);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const chatForm = document.getElementById("chat-form");
+        const chatBox = document.getElementById("chat-box");
+        const userInput = document.getElementById("user-input");
+        const askBTN = document.getElementById("ask-btn");
+        let thinkingBubble;
+
+        function addMessage(message, isUser = false, isThinking = false) {
+            const div = document.createElement("div");
+            div.classList.add("message", isUser ? "user-message" : "bot-message");
+            if (isThinking) {
+                div.classList.add("thinking");
+                thinkingBubble = div;
+            }
+            const icon = `<i class='fas ${isUser ? "fa-user-circle" : "fa-robot"}'></i>`;
+            div.innerHTML = `${icon}<span>${message}</span>`;
+            chatBox.appendChild(div);
+            chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: "smooth" });
+        }
+
+        async function getBotResponse(msg) {
+            addMessage("Thinking...", false, true);
+            askBTN.disabled = true;
+            askBTN.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            try {
+                const res = await fetch("https://chatbot.kingsweys.com/api/v1/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: msg })
+                });
+                const data = await res.json();
+                if (thinkingBubble) thinkingBubble.remove();
+                addMessage(data.reply || "Sorry, no response.", false);
+            } catch (err) {
+                if (thinkingBubble) thinkingBubble.remove();
+                addMessage("Error talking to bot.", false);
+            } finally {
+                askBTN.disabled = false;
+                askBTN.innerHTML = 'Ask';
+            }
+        }
+
+        chatForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const msg = userInput.value.trim();
+            if (!msg) return;
+            addMessage(msg, true);
+            userInput.value = "";
+            getBotResponse(msg);
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"
+    style="border: 1px solid white;"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Preloader -->
+<div id="preloader"></div>
+
+<!-- Vendor JS Files -->
+<script src="website-assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script src="website-assets/vendor/aos/aos.js"></script>
+<script src="website-assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="website-assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="website-assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="website-assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="website-assets/vendor/glightbox/js/glightbox.min.js"></script>
+
+<!-- Main JS File -->
+<script src="website-assets/js/main.js"></script>
+
+</body>
+
+</html>

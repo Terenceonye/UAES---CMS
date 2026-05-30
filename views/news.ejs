@@ -1,0 +1,444 @@
+<%- include("websitepartials/header") %>
+  <main class="main">
+
+    <style>
+      article img {
+        max-width: 100%;
+      }
+
+
+      .category {
+        left: auto !important;
+        right: 0 !important;
+        top: 0 !important;
+        margin: 0.5rem;
+      }
+    </style>
+
+    <!-- Page Title -->
+    <div class="page-title dark-background"
+      style="background-image: url(website-assets/img/gallery/Dr-Basilia-Igbokwe3.jpg);">
+      <div class="container position-relative">
+        <h1>News</h1>
+        <p>Your source for the latest updates, stories, and important announcements from across the institution.</p>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li class="current">News</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- News Hero Section -->
+    <!-- News Hero Section -->
+    <section id="news-hero" class="news-hero section">
+      <div class="container" data-aos="fade-up">
+        <div class="row g-4"></div>
+      </div>
+    </section>
+
+
+
+
+    <!-- Pagination 2 Section -->
+    <section id="pagination-2" class="pagination-2 section mt-4">
+
+      <div class="container">
+        <nav class="d-flex justify-content-center" aria-label="Page navigation">
+          <ul>
+            <li>
+              <a href="#" aria-label="Previous page">
+                <i class="bi bi-arrow-left"></i>
+                <span class="d-none d-sm-inline">Previous</span>
+              </a>
+            </li>
+
+            <li><a href="#" class="active">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li class="ellipsis">...</li>
+            <li><a href="#">8</a></li>
+            <li><a href="#">9</a></li>
+            <li><a href="#">10</a></li>
+
+            <li>
+              <a href="#" aria-label="Next page">
+                <span class="d-none d-sm-inline">Next</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+    </section><!-- /Pagination 2 Section -->
+
+  </main>
+
+  <%- include("websitepartials/footer") %>
+
+
+    <script>
+      const pageSize = 5;
+      let currentPage = 1;
+
+      function slugify(text) {
+        return text
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-')
+          .trim();
+      }
+
+      async function fetchNews() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+
+        if (id) {
+          try {
+            const res = await fetch(`/api/news`);
+            const data = await res.json();
+            const news = data.news.find(n => n._id === id);
+
+            if (!news) throw new Error("News not found");
+
+            // ✅ Update URL to /news?id&slug 
+            const slug = slugify(news.title);
+
+            // Manually build query string with title first
+            const newQuery = `title=${encodeURIComponent(slug)}&id=${encodeURIComponent(news._id)}`;
+
+            const newUrl = `${window.location.origin}${window.location.pathname}?${newQuery}`;
+
+            window.history.replaceState({}, '', newUrl);
+
+
+
+            renderSingleNews(news, data.news);
+          } catch (err) {
+            console.error("Error loading single news:", err);
+          }
+        } else {
+          try {
+            const res = await fetch(`/api/news`);
+            const data = await res.json();
+            const totalPages = Math.ceil(data.total / pageSize);
+
+            const startIndex = (currentPage - 1) * pageSize;
+            const paginated = data.news.slice(startIndex, startIndex + pageSize);
+
+            renderNewsList(paginated);
+            renderPagination(totalPages);
+          } catch (err) {
+            console.error("Error loading news list:", err);
+          }
+        }
+      }
+
+      function getImageUrl(newsItem) {
+        return (newsItem.images && newsItem.images.length > 0)
+          ? newsItem.images[0].url
+          : "website-assets/img/default.jpg";
+      }
+
+      function renderNewsList(newsList) {
+        const row = document.querySelector(".row.g-4");
+        row.innerHTML = `
+      <div class="col-lg-3"><div class="side-posts"></div></div>
+      <div class="col-lg-6"><article class="post-item main-post"></article></div>
+      <div class="col-lg-3"><div class="side-posts right"></div></div>
+    `;
+
+        if (!newsList.length) return row.innerHTML = `<p>No news found.</p>`;
+
+        const main = newsList[0];
+        document.querySelector(".main-post").innerHTML = `
+      <div class="post-img">
+        <img src="${getImageUrl(main)}" class="img-fluid" alt="Main news image">
+        <span class="category bg-info">${main.newsTag || "News"}</span>
+      </div>
+      <div class="post-content">
+        <h2 class="post-title"><a href="?id=${main._id}">${main.title}</a></h2>
+        <p class="post-excerpt">${main.content.slice(0, 200)}...</p>
+        <div class="post-meta">
+          <span>${new Date(main.createdAt).toLocaleDateString()}</span>
+        </div>
+      </div>
+    `;
+
+        const leftSide = document.querySelector(".side-posts");
+        const rightSide = document.querySelector(".side-posts.right");
+
+        newsList.slice(1).forEach((post, index) => {
+          const html = `
+        <article class="post-item side-post">
+          <div class="post-img">
+            <img src="${getImageUrl(post)}" class="img-fluid" alt="Side news image">
+            <span class="category bg-danger">${post.newsTag || "General"}</span>
+          </div>
+          <div class="post-content">
+            <h3 class="post-title"><a href="?id=${post._id}">${post.title}</a></h3>
+            <div class="post-meta">
+              <span>${new Date(post.createdAt).toLocaleDateString()}</span>
+            </div>
+          </div>
+        </article>
+      `;
+          (index % 2 === 0 ? leftSide : rightSide).insertAdjacentHTML("beforeend", html);
+        });
+      }
+
+      function renderPagination(totalPages) {
+        const container = document.querySelector("#pagination-2 ul");
+        if (!container) return;
+        container.innerHTML = "";
+
+        const prevBtn = `<li><a href="#" ${currentPage === 1 ? 'class="disabled"' : ''} onclick="changePage(${currentPage - 1})"><i class="bi bi-arrow-left"></i><span class="d-none d-sm-inline">Previous</span></a></li>`;
+        container.insertAdjacentHTML("beforeend", prevBtn);
+
+        for (let i = 1; i <= totalPages; i++) {
+          container.insertAdjacentHTML("beforeend", `<li><a href="#" ${i === currentPage ? 'class="active"' : ''} onclick="changePage(${i})">${i}</a></li>`);
+        }
+
+        const nextBtn = `<li><a href="#" ${currentPage === totalPages ? 'class="disabled"' : ''} onclick="changePage(${currentPage + 1})"><span class="d-none d-sm-inline">Next</span><i class="bi bi-arrow-right"></i></a></li>`;
+        container.insertAdjacentHTML("beforeend", nextBtn);
+      }
+
+      function changePage(page) {
+        if (page < 1) return;
+        currentPage = page;
+        fetchNews();
+      }
+
+      function renderSingleNews(news, recentNews = []) {
+        document.querySelector(".page-title h1").textContent = news.title;
+        document.querySelector(".page-title h1").style.fontSize = '20px';
+        document.querySelector(".page-title p").style.display = "none";
+
+        const row = document.querySelector(".row.g-4");
+
+        const recentItemsHTML = recentNews
+          .filter(item => item._id !== news._id)
+          .slice(0, 5)
+          .map(item => `
+        <div class="d-flex mb-3 border-bottom pb-2">
+          <img src="${getImageUrl(item)}" class="flex-shrink-0 me-3 rounded" alt="${item.title}" width="80" height="60" style="object-fit: cover;">
+          <div>
+            <h6 class="mb-1">
+              <a href="?id=${item._id}" class="text-dark text-decoration-none">${item.title.slice(0, 60)}...</a>
+            </h6>
+            <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>${new Date(item.createdAt).toLocaleDateString()}</small>
+          </div>
+        </div>
+      `).join("");
+
+        row.innerHTML = `
+      <div class="col-lg-8">
+        <article class="post-item shadow-sm p-4 rounded bg-white">
+          <div class="post-img position-relative mb-4">
+            <img src="${getImageUrl(news)}" class="img-fluid rounded w-100" alt="News image">
+            <span class="category position-absolute top-0 m-3 px-3 py-1 bg-success text-white rounded-pill fw-semibold shadow-sm">
+              ${news.newsTag || "News"}
+            </span>
+          </div>
+          <div class="post-content">
+            <h1 class="post-title fw-bold mb-3" style="font-size: 1.5rem;">${news.title}</h1>
+            <div class="post-meta text-muted mb-4" style="font-size: 0.9rem;">
+              <i class="bi bi-calendar3 me-1"></i> ${new Date(news.createdAt).toLocaleDateString()}
+            </div>
+            <div class="post-excerpt" style="line-height: 1.8; font-size: 1.05rem;">
+              ${news.content}
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="bg-light p-4 rounded shadow-sm">
+          <h4 class="mb-4 border-bottom pb-2">Recent News</h4>
+          ${recentItemsHTML || `<p>No recent news found.</p>`}
+        </div>
+      </div>
+    `;
+
+        const pagination = document.querySelector("#pagination-2");
+        if (pagination) pagination.style.display = "none";
+      }
+
+      document.addEventListener("DOMContentLoaded", fetchNews);
+    </script>
+
+
+
+    <!-- <script>
+      const pageSize = 5;
+      let currentPage = 1;
+
+      async function fetchNews() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+
+        if (id) {
+          try {
+            const res = await fetch(`/api/news`);
+            const data = await res.json();
+            const news = data.news.find(n => n._id === id);
+            renderSingleNews(news, data.news);
+          } catch (err) {
+            console.error("Error loading single news:", err);
+          }
+        }
+        else {
+          try {
+            const res = await fetch(`/api/news`);
+            const data = await res.json();
+            const totalPages = Math.ceil(data.total / pageSize);
+
+            const startIndex = (currentPage - 1) * pageSize;
+            const paginated = data.news.slice(startIndex, startIndex + pageSize);
+
+            renderNewsList(paginated);
+            renderPagination(totalPages);
+          } catch (err) {
+            console.error("Error loading news list:", err);
+          }
+        }
+      }
+
+      function getImageUrl(newsItem) {
+        return (newsItem.images && newsItem.images.length > 0)
+          ? newsItem.images[0].url
+          : "website-assets/img/default.jpg";
+      }
+
+      function renderNewsList(newsList) {
+        const row = document.querySelector(".row.g-4");
+        row.innerHTML = `
+      <div class="col-lg-3"><div class="side-posts"></div></div>
+      <div class="col-lg-6"><article class="post-item main-post"></article></div>
+      <div class="col-lg-3"><div class="side-posts right"></div></div>
+    `;
+
+        if (!newsList.length) return row.innerHTML = `<p>No news found.</p>`;
+
+        const main = newsList[0];
+        document.querySelector(".main-post").innerHTML = `
+      <div class="post-img">
+        <img src="${getImageUrl(main)}" class="img-fluid" alt="Main news image">
+        <span class="category bg-info" >${main.newsTag || "News"}</span>
+      </div>
+      <div class="post-content">
+        <h2 class="post-title"><a href="?id=${main._id}">${main.title}</a></h2>
+        <p class="post-excerpt">${main.content.slice(0, 200)}...</p>
+        <div class="post-meta">
+          <span>${new Date(main.createdAt).toLocaleDateString()}</span>
+        </div>
+      </div>
+    `;
+
+        const leftSide = document.querySelector(".side-posts");
+        const rightSide = document.querySelector(".side-posts.right");
+
+        newsList.slice(1).forEach((post, index) => {
+          const html = `
+        <article class="post-item side-post">
+          <div class="post-img">
+            <img src="${getImageUrl(post)}" class="img-fluid" alt="Side news image">
+            <span class="category bg-danger">${post.newsTag || "General"}</span>
+          </div>
+          <div class="post-content">
+            <h3 class="post-title"><a href="?id=${post._id}">${post.title}</a></h3>
+            <div class="post-meta">
+              <span>${new Date(post.createdAt).toLocaleDateString()}</span>
+            </div>
+          </div>
+        </article>
+      `;
+          (index % 2 === 0 ? leftSide : rightSide).insertAdjacentHTML("beforeend", html);
+        });
+      }
+
+      function renderPagination(totalPages) {
+        const container = document.querySelector("#pagination-2 ul");
+        if (!container) return;
+        container.innerHTML = "";
+
+        const prevBtn = `<li><a href="#" ${currentPage === 1 ? 'class="disabled"' : ''} onclick="changePage(${currentPage - 1})"><i class="bi bi-arrow-left"></i><span class="d-none d-sm-inline">Previous</span></a></li>`;
+        container.insertAdjacentHTML("beforeend", prevBtn);
+
+        for (let i = 1; i <= totalPages; i++) {
+          container.insertAdjacentHTML("beforeend", `<li><a href="#" ${i === currentPage ? 'class="active"' : ''} onclick="changePage(${i})">${i}</a></li>`);
+        }
+
+        const nextBtn = `<li><a href="#" ${currentPage === totalPages ? 'class="disabled"' : ''} onclick="changePage(${currentPage + 1})"><span class="d-none d-sm-inline">Next</span><i class="bi bi-arrow-right"></i></a></li>`;
+        container.insertAdjacentHTML("beforeend", nextBtn);
+      }
+
+      function changePage(page) {
+        if (page < 1) return;
+        currentPage = page;
+        fetchNews();
+      }
+
+      function renderSingleNews(news, recentNews = []) {
+
+        document.querySelector(".page-title h1").textContent = news.title;
+        document.querySelector(".page-title h1").style.fontSize = '20px'
+        document.querySelector(".page-title p").style.display = "none"; // Hide the description in single news view
+
+
+        const row = document.querySelector(".row.g-4");
+
+        const recentItemsHTML = recentNews
+          .filter(item => item._id !== news._id)
+          .slice(0, 5)
+          .map(item => `
+      <div class="d-flex mb-3 border-bottom pb-2">
+        <img src="${getImageUrl(item)}" class="flex-shrink-0 me-3 rounded" alt="${item.title}" width="80" height="60" style="object-fit: cover;">
+        <div>
+          <h6 class="mb-1">
+            <a href="?id=${item._id}" class="text-dark text-decoration-none">${item.title.slice(0, 60)}...</a>
+          </h6>
+          <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>${new Date(item.createdAt).toLocaleDateString()}</small>
+        </div>
+      </div>
+    `).join("");
+
+        row.innerHTML = `
+    <div class="col-lg-8">
+      <article class="post-item shadow-sm p-4 rounded bg-white">
+        <div class="post-img position-relative mb-4">
+          <img src="${getImageUrl(news)}" class="img-fluid rounded w-100" alt="News image">
+          <span class="category position-absolute top-0 m-3 px-3 py-1 bg-success text-white rounded-pill fw-semibold shadow-sm">
+            ${news.newsTag || "News"}
+          </span>
+        </div>
+        <div class="post-content">
+          <h1 class="post-title fw-bold mb-3" style="font-size: 1.5rem;">${news.title}</h1>
+          <div class="post-meta text-muted mb-4" style="font-size: 0.9rem;">
+            <i class="bi bi-calendar3 me-1"></i> ${new Date(news.createdAt).toLocaleDateString()}
+          </div>
+          <div class="post-excerpt" style="line-height: 1.8; font-size: 1.05rem;">
+            ${news.content}
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="bg-light p-4 rounded shadow-sm">
+        <h4 class="mb-4 border-bottom pb-2">Recent News</h4>
+        ${recentItemsHTML || `<p>No recent news found.</p>`}
+      </div>
+    </div>
+  `;
+
+        const pagination = document.querySelector("#pagination-2");
+        if (pagination) pagination.style.display = "none";
+      }
+
+
+      document.addEventListener("DOMContentLoaded", fetchNews);
+    </script> -->

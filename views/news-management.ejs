@@ -1,0 +1,376 @@
+<%- include('partials/header-sidebar') %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+
+
+    <style>
+        .card-icon {
+            font-size: 1.5rem;
+        }
+
+        .card-img-top {
+            object-fit: cover;
+            height: 180px;
+        }
+
+        .card h6 {
+            font-size: 0.95rem;
+            color: #6c757d;
+        }
+
+        .no-news {
+            margin-top: 2rem;
+        }
+
+        .delete-icon {
+            cursor: pointer;
+            color: #dc3545;
+        }
+
+        .date-badge {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+        }
+
+
+        .delete-icon {
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .edit-icon {
+            color: #0dcaf0;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .delete-icon:hover {
+            background-color: #f8d7da;
+            color: #dc3545;
+            transform: scale(1.1);
+        }
+
+        .edit-icon:hover {
+            background-color: #d1ecf1;
+            color: #0dcaf0;
+            transform: scale(1.1);
+        }
+
+        .delete-icon i {
+            font-size: 1rem;
+        }
+
+        .edit-icon i {
+            font-size: 1rem;
+        }
+    </style>
+
+    <div class="page-wrapper" id="toTop">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Manage News</h4>
+                    <h6>Add/Update/Delete News</h6>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <div>
+                        <!-- Dashboard cards -->
+                        <div class="row g-4 mb-5">
+                            <div class="col-md-4">
+                                <div class="card shadow">
+                                    <div class="card-body d-flex align-items-center">
+                                        <i class="bi bi-newspaper card-icon text-primary me-3 fs-2"></i>
+                                        <div>
+                                            <h6>Total News</h6>
+                                            <h3 id="totalNews">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow">
+                                    <div class="card-body d-flex align-items-center">
+                                        <i class="bi bi-eye card-icon text-success me-3 fs-2"></i>
+                                        <div>
+                                            <h6>Active News</h6>
+                                            <h3 id="activeNews">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow">
+                                    <div class="card-body d-flex align-items-center">
+                                        <i class="bi bi-eye-slash card-icon text-danger me-3 fs-2"></i>
+                                        <div>
+                                            <h6>Inactive News</h6>
+                                            <h3 id="inactiveNews">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Filter Buttons -->
+                        <div class="btn-group mb-3" role="group" aria-label="Filter news">
+                            <input type="radio" class="btn-check" name="filter" id="filterAll" autocomplete="off"
+                                checked>
+                            <label class="btn btn-outline-primary" for="filterAll">All</label>
+
+                            <input type="radio" class="btn-check" name="filter" id="filterActive" autocomplete="off">
+                            <label class="btn btn-outline-success" for="filterActive">Active</label>
+
+                            <input type="radio" class="btn-check" name="filter" id="filterInactive" autocomplete="off">
+                            <label class="btn btn-outline-danger" for="filterInactive">Inactive</label>
+                        </div>
+
+
+                        <!-- Recent news section -->
+                        <div>
+                            <h4>Recent News</h4>
+                            <div id="recentNewsList" class="row g-3 my-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    </div>
+
+
+    <%- include("partials/footer") %>
+
+
+        <!-- Alert Container -->
+        <div id="alert-container" style="position: fixed; top: 1rem; right: 1rem; z-index: 1050;"></div>
+
+        <!-- Styles -->
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                background-color: #f8f9fa;
+            }
+
+            .dashboard-header {
+                margin-bottom: 2rem;
+            }
+
+            .alert {
+                padding: 0.75rem 1.25rem;
+                margin-bottom: 1rem;
+                border-radius: 0.25rem;
+                box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+                font-weight: 600;
+                min-width: 250px;
+                color: #fff;
+                cursor: pointer;
+                opacity: 0.95;
+                transition: opacity 0.3s ease;
+            }
+
+            .alert-success {
+                background-color: #28a745;
+            }
+
+            .alert-error {
+                background-color: #dc3545;
+            }
+
+            .alert:hover {
+                opacity: 0.7;
+            }
+
+            .dash-link {
+                color: #fff;
+                cursor: pointer;
+                text-decoration: none;
+            }
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Scripts -->
+        <script>
+            function showAlert(message, type = "success", duration = 5000) {
+                const container = document.getElementById("alert-container");
+                if (!container) return;
+
+                const alert = document.createElement("div");
+                alert.className = `alert alert-${type === "error" ? "error" : "success"}`;
+                alert.textContent = message;
+
+                alert.addEventListener("click", () => {
+                    alert.style.opacity = "0";
+                    setTimeout(() => alert.remove(), 300);
+                });
+
+                container.appendChild(alert);
+
+                setTimeout(() => {
+                    alert.style.opacity = "0";
+                    setTimeout(() => alert.remove(), 300);
+                }, duration);
+            }
+
+            window.addEventListener("DOMContentLoaded", () => {
+    <% if (success_msg && success_msg.length > 0) { %>
+                    showAlert("<%= success_msg %>", "success");
+    <% } %>
+    <% if (error_msg && error_msg.length > 0) { %>
+                    showAlert("<%= error_msg %>", "error");
+    <% } %>
+  });
+        </script>
+
+
+
+
+
+        <!-- Scripts -->
+        <script>
+            let allNews = [];
+
+            fetch('/api/v1/news')
+                .then(res => res.json())
+                .then(data => {
+                    allNews = data.news || [];
+
+                    const totalNews = data.total || allNews.length;
+                    const active = allNews.filter(n => n.isActive !== false);
+                    const inactive = allNews.filter(n => n.isActive === false);
+
+                    document.getElementById('totalNews').textContent = totalNews;
+                    document.getElementById('activeNews').textContent = active.length;
+                    document.getElementById('inactiveNews').textContent = inactive.length;
+
+                    renderNews('all'); // Show all on page load
+
+                    // Filter button listeners
+                    document.getElementById('filterAll').addEventListener('change', () => renderNews('all'));
+                    document.getElementById('filterActive').addEventListener('change', () => renderNews('active'));
+                    document.getElementById('filterInactive').addEventListener('change', () => renderNews('inactive'));
+                })
+                .catch(err => {
+                    console.error('Failed to fetch news stats:', err);
+                });
+
+            function renderNews(filter) {
+                const recentContainer = document.getElementById('recentNewsList');
+                recentContainer.innerHTML = '';
+
+                let filteredNews = allNews;
+                if (filter === 'active') {
+                    filteredNews = allNews.filter(n => n.isActive !== false);
+                } else if (filter === 'inactive') {
+                    filteredNews = allNews.filter(n => n.isActive === false);
+                }
+
+                if (!filteredNews.length) {
+                    const empty = document.createElement('div');
+                    empty.className = 'col-12';
+                    empty.innerHTML = `
+                <div class="alert alert-info d-flex justify-content-between align-items-center p-4 no-news" role="alert">
+                  <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-circle-info fa-2x me-3 text-primary"></i>
+                    <div class="text-dark">
+                      <h5 class="mb-1">No ${filter === 'all' ? '' : filter} news found</h5>
+                      <p class="mb-0">Upload your first ${filter === 'all' ? '' : filter} news item to get started.</p>
+                    </div>
+                  </div>
+                  <a href="/add-news" class="btn btn-primary">Upload News</a>
+                </div>
+            `;
+                    recentContainer.appendChild(empty);
+                    return;
+                }
+
+                filteredNews.slice(0, 6).forEach(news => {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-4';
+                    const dateStr = new Date(news.createdAt).toLocaleDateString();
+
+                    col.innerHTML = `
+                    <div class="card h-100 shadow-sm position-relative">
+                        <span class="date-badge">${dateStr}</span>
+                        <img src="${news.images?.[0]?.url || '/default.jpg'}" class="card-img-top" alt="News Image">
+                        <div class="card-body">
+                        <h5 class="card-title">${news.title}</h5>
+                    
+                        </div>
+                        <div class="card-footer d-flex justify-content-end align-items-center ">
+                        
+                        <div class="edit-icon me-4" onclick="location.href='/news/${news._id}/edit'" title="Edit News">
+                            Edit<i class="bi bi-pencil"></i>
+                        </div>
+                        <div class="delete-icon" data-id="${news._id}" title="Delete News">
+                            Trash<i class="bi bi-trash"></i>
+                        </div>
+                        </div>
+                        ${news.isActive
+                            ? '<div class="badge bg-success position-absolute top-0 end-0 m-2">Active</div>'
+                            : '<div class="badge bg-danger position-absolute top-0 end-0 m-2">Inactive</div>'}
+                    </div>
+                    `;
+
+
+                    recentContainer.appendChild(col);
+                });
+
+                // Rebind delete buttons
+                document.querySelectorAll('.delete-icon').forEach(icon => {
+                    icon.addEventListener('click', async () => {
+                        const id = icon.getAttribute('data-id');
+                        if (confirm('Are you sure you want to delete this news item?')) {
+                            try {
+                                const res = await fetch(`/news/${id}/delete`, { method: 'POST' });
+                                if (res.ok) {
+                                    showAlert('News deleted successfully.');
+                                    location.reload(); // Refresh after delete
+                                } else {
+                                    showAlert('Failed to delete news.', "danger");
+                                }
+                            } catch (err) {
+                                console.error(err);
+                                showAlert('Error deleting news.', "danger");
+                            }
+                        }
+                    });
+                });
+            }
+        </script>
+        </body>
+
+        </html>

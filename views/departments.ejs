@@ -1,0 +1,525 @@
+<%- include("partials/header-sidebar")%>
+
+
+
+
+    <div class="page-wrapper" id="toTop">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Manage Departments</h4>
+                    <h6>Add/Update/Delete Departments</h6>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+
+                                <label for="faculty">School</label>
+                                <select id="faculty" class="form-select">
+                                    <option value="" selected>Choose a School</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="deptName">Department Name</label>
+                                <input type="text" id="deptName" class="form-control"
+                                    placeholder="Enter Department name">
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label for="deptDescription">Department Structure</label>
+                                <textarea id="deptDescription" class="form-control"
+                                    placeholder="Enter Short description"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="form-group">
+                                <label for="mission">Department Mission</label>
+                                <textarea id="mission" class="form-control"
+                                    placeholder="Enter Department Mission"></textarea>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Research Focus -->
+                        <div class="col-lg-12 mt-3">
+                            <label>Research Focus</label>
+                            <div id="researchFocusContainer">
+                                <div class="input-group mb-2">
+                                    <input type="text" class="form-control research-focus-input"
+                                        placeholder="Enter Research Focus">
+                                    <button class="btn btn-success add-research-focus" type="button">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-12">
+                            <a href="javascript:void(0);" id="createDeptBtn" class="btn btn-submit me-2">Create
+                                Department</a>
+
+                            <a href="javascript:void(0);" id="UpdateDeptBtn" class="btn btn-submit me-2">Update
+                                Department</a>
+
+                            <a href="javascript:void(0);" id="cancelUpdateBtn" onclick="cancelUpdate()"
+                                class="btn btn-cancel me-2">Cancel</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- table to contain list of schools -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header pb-0">
+                            <h4 class="card-title mb-0">All Departments</h4>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th>S/N</th>
+                                            <th>School</th>
+                                            <th>Department</th>
+                                            <th>Actions</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="schoolTableBody">
+                                        <!-- inserted from js -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+
+    <%- include("partials/footer")%>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+
+
+                // Add Research Focus Field
+                document.getElementById('researchFocusContainer').addEventListener('click', function (e) {
+                    if (e.target.classList.contains('add-research-focus')) {
+                        const container = document.createElement('div');
+                        container.className = 'input-group mb-2';
+                        container.innerHTML = `
+                <input type="text" class="form-control research-focus-input" placeholder="Enter Research Focus">
+                <button class="btn btn-danger remove-field" type="button">−</button>
+            `;
+                        this.appendChild(container);
+                    }
+                });
+
+                // Remove any added input fields
+                document.body.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('remove-field')) {
+                        e.target.parentElement.remove();
+                    }
+                });
+            });
+        </script>
+
+
+        <script>
+            // const token = localStorage.getItem('token')   //decleared in general
+            document.addEventListener("DOMContentLoaded", async () => {
+                document.getElementById("UpdateDeptBtn").style.display = "none";
+                document.getElementById("cancelUpdateBtn").style.display = "none"
+
+                let editingSchoolId = null;
+
+                //Get the schools to populate the select options
+                try {
+                    const response = await fetch('/api/schools', {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                    const allData = await response.json();
+                    const data = allData.data;
+
+                    const facultySelect = document.getElementById("faculty");
+                    data.forEach(school => {
+                        const option = document.createElement("option");
+                        option.value = school._id; // assuming MongoDB ID
+                        option.textContent = school.name;
+                        facultySelect.appendChild(option);
+                    });
+                } catch (error) {
+                    Swal.fire("Error", "Error loading schools", "error");
+                }
+
+            });
+
+        </script>
+
+
+        <!-- CREATE DEPARTMENT -->
+        <script>
+            document.getElementById("createDeptBtn").addEventListener("click", async function () {
+                const faculty = document.getElementById("faculty").value.trim();
+                const name = document.getElementById("deptName").value.trim();
+                const structure = document.getElementById("deptDescription").value.trim();
+                const mission = document.getElementById("mission").value.trim();
+                const token = localStorage.getItem("token");
+
+
+
+                // Collect Research Focus
+                const researchFocus = Array.from(document.querySelectorAll('.research-focus-input'))
+                    .map(input => input.value.trim())
+                    .filter(value => value);
+
+                // Validation
+                if (!faculty) return Swal.fire("Error", "Please select a School", "warning");
+                if (!name) return Swal.fire("Error", "Department name is required", "warning");
+                if (!structure) return Swal.fire("Error", "Department structure is required", "warning");
+                if (!mission) return Swal.fire("Error", "Department mission is required", "warning");
+                // if (academicPrograms.length === 0) return Swal.fire("Error", "Enter at least one Academic Program", "warning");
+                if (researchFocus.length === 0) return Swal.fire("Error", "Enter at least one Research Focus", "warning");
+
+                try {
+                    const res = await fetch("/api/departments", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({
+                            faculty,
+                            name,
+                            structure,
+                            mission,
+                            researchFocus,
+                        }),
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok || !data.success) {
+                        let message = "Failed to create department";
+                        if (Array.isArray(data.message)) {
+                            message = data.message.join("\n");
+                        } else if (typeof data.message === "string") {
+                            message = data.message;
+                        }
+                        throw new Error(message);
+                    }
+
+                    Swal.fire("Success", "Department created successfully!", "success");
+
+                    // Reset form
+                    document.getElementById("faculty").value = "";
+                    document.getElementById("deptName").value = "";
+                    document.getElementById("deptDescription").value = "";
+                    document.getElementById("mission").value = "";
+
+                    // Clear dynamic input fields
+                    // document.getElementById("academicProgramsContainer").innerHTML = `
+                    // <div class="input-group mb-2">
+                    //     <input type="text" class="form-control academic-program-input" placeholder="Enter Academic Program">
+                    //     <button class="btn btn-success add-academic-program" type="button">+</button>
+                    // </div>`;
+                    document.getElementById("researchFocusContainer").innerHTML = `
+            <div class="input-group mb-2">
+                <input type="text" class="form-control research-focus-input" placeholder="Enter Research Focus">
+                <button class="btn btn-success add-research-focus" type="button">+</button>
+            </div>`;
+
+
+                    loadDepartments();  //to refresh the table
+
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire("Error", err.message, "error");
+                }
+            });
+        </script>
+
+
+
+        <!-- LOAD Departments INTO TABLES -->
+
+        <script>
+            async function loadDepartments() {
+                const token = localStorage.getItem("token");
+
+                try {
+                    const res = await fetch("/api/departments", {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+
+                    const data = await res.json();
+                    const dept = data.data;
+
+                    // Destroy DataTable before rebuilding it
+                    if ($.fn.DataTable.isDataTable('.datanew')) {
+                        $('.datanew').DataTable().destroy();
+                    }
+
+                    const tbody = document.getElementById("schoolTableBody");
+                    tbody.innerHTML = ""; // Clear old rows
+
+
+                    // console.log("All depts", dept)
+                    dept.forEach((dept, i) => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${dept.faculty.name}</td>
+                    <td>${dept.name}</td>
+                    
+                    <td>
+                        <span class="me-2 text-primary action-btns" onclick="editDepartment('${dept._id}')">
+                            <i class="fas fa-pen me-1"></i>Edit
+                        </span>
+                        <span class="text-danger action-btns" onclick="confirmDeleteDepartment('${dept._id}')">
+                            <i class="fas fa-trash me-1"></i>Delete
+                        </span>
+                    </td>
+                `;
+                        tbody.appendChild(row);
+                    });
+
+                    // Re-initialize DataTable after rows are inserted
+                    $('.datanew').DataTable();
+
+                } catch (err) {
+                    Swal.fire("Error", "Failed to load Departments", "error");
+                    console.error(err);
+                }
+            }
+
+            // Load on page start
+            document.addEventListener("DOMContentLoaded", function () {
+                loadDepartments();
+            });
+        </script>
+
+
+
+        <!-- EDITING AND DELETING WITH SWEET ALART -->
+
+        <script>
+            let editingDepartmentId = null;
+
+            function confirmDeleteDepartment(id) {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "This will permanently delete this Department.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "Cancel"
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            const res = await fetch(`/api/departments/${id}`, {
+                                method: "DELETE",
+                                headers: {
+                                    Authorization: `Bearer ${token}`
+                                }
+                            });
+
+                            const data = await res.json();
+
+                            if (!res.ok || !data.success) {
+                                throw new Error("Failed to delete department");
+                            }
+
+                            Swal.fire("Deleted!", "Department has been deleted.", "success");
+                            loadDepartments();
+                        } catch (err) {
+                            console.error(err);
+                            Swal.fire("Error", err.message, "error");
+                        }
+                    }
+                });
+            }
+
+            async function editDepartment(id) {
+                const token = localStorage.getItem("token");
+                try {
+                    const res = await fetch(`/api/departments?id=${id}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+
+                    if (!res.ok) throw new Error("Failed to fetch department data");
+                    const data = await res.json();
+                    if (!data.success) throw new Error(data.message || "Failed to fetch department data");
+
+                    // Populate fields
+                    document.getElementById("faculty").value = data.data.faculty?._id || "";
+                    document.getElementById("deptName").value = data.data.name;
+                    document.getElementById("deptDescription").value = data.data.structure || "";
+                    document.getElementById("mission").value = data.data.mission || "";
+
+                    // Populate researchFocus
+                    const researchFocusContainer = document.getElementById("researchFocusContainer");
+                    researchFocusContainer.innerHTML = "";
+
+                    (data.data.researchFocus || []).forEach((focus, index) => {
+                        researchFocusContainer.innerHTML += `
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control research-focus-input" value="${focus}" placeholder="Enter Research Focus">
+                    ${index === 0 ? `
+                        <button class="btn btn-success add-research-focus" type="button">+</button>
+                    ` : `
+                        <button class="btn btn-danger remove-research-focus" type="button">−</button>
+                    `}
+                </div>`;
+                    });
+
+                    // Add event listeners to newly created "+" and "−" buttons
+                    bindResearchFocusButtons();
+
+                    editingDepartmentId = id;
+
+                    document.getElementById("createDeptBtn").style.display = "none";
+                    document.getElementById("UpdateDeptBtn").style.display = "inline-block";
+                    document.getElementById("cancelUpdateBtn").style.display = "inline-block";
+
+                    document.getElementById("toTop")?.scrollIntoView({ behavior: "smooth" });
+                } catch (err) {
+                    Swal.fire("Error", err.message, "error");
+                }
+            }
+
+            function bindResearchFocusButtons() {
+                document.querySelectorAll(".add-research-focus").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const newGroup = document.createElement("div");
+                        newGroup.className = "input-group mb-2";
+                        newGroup.innerHTML = `
+                <input type="text" class="form-control research-focus-input" placeholder="Enter Research Focus">
+                <button class="btn btn-danger remove-research-focus" type="button">−</button>`;
+                        document.getElementById("researchFocusContainer").appendChild(newGroup);
+                        bindResearchFocusButtons(); // Re-bind new buttons
+                    });
+                });
+
+                document.querySelectorAll(".remove-research-focus").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        btn.closest(".input-group").remove();
+                    });
+                });
+            }
+
+            document.getElementById("UpdateDeptBtn").addEventListener("click", async function () {
+                if (!editingDepartmentId) {
+                    return Swal.fire("Error", "No department selected for update", "warning");
+                }
+
+                const name = document.getElementById("deptName").value.trim();
+                const structure = document.getElementById("deptDescription").value.trim();
+                const mission = document.getElementById("mission").value.trim();
+                const faculty = document.getElementById("faculty").value.trim();
+                const token = localStorage.getItem("token");
+
+                const researchFocus = Array.from(document.querySelectorAll('.research-focus-input'))
+                    .map(input => input.value.trim())
+                    .filter(Boolean);
+
+                if (!name || !structure || !mission || !faculty || researchFocus.length === 0) {
+                    return Swal.fire("Error", "All fields are required including at least one Research Focus", "warning");
+                }
+
+                try {
+                    const res = await fetch(`/api/departments/${editingDepartmentId}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ name, structure, mission, faculty, researchFocus }),
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok || !data.success) {
+                        let message = data.message || "Failed to update department";
+                        if (Array.isArray(data.message)) {
+                            message = data.message.join("\n");
+                        } else if (typeof data.message === "string") {
+                            message = data.message;
+                        }
+                        
+                        return Swal.fire("Error", message, "error");
+                    }
+
+                    Swal.fire("Success", "Department updated successfully!", "success");
+
+                    // Reset form
+                    cancelUpdate();
+                    loadDepartments();
+
+                    document.querySelector(".table-responsive").scrollIntoView({ behavior: "smooth" });
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire("Error", err.message, "error");
+                }
+            });
+
+
+            function cancelUpdate() {
+                // Reset form buttons
+                document.getElementById("createDeptBtn").style.display = "inline-block";
+                document.getElementById("UpdateDeptBtn").style.display = "none";
+                document.getElementById("cancelUpdateBtn").style.display = "none";
+
+                // Clear all input fields
+                document.getElementById("faculty").value = "";
+                document.getElementById("deptName").value = "";
+                document.getElementById("deptDescription").value = "";
+                document.getElementById("mission").value = "";
+
+                // Reset research focus inputs
+                document.getElementById("researchFocusContainer").innerHTML = `
+        <div class="input-group mb-2">
+            <input type="text" class="form-control research-focus-input" placeholder="Enter Research Focus">
+            <button class="btn btn-success add-research-focus" type="button">+</button>
+        </div>`;
+
+                // Reset editing state
+                editingDepartmentId = null;
+
+                // Scroll back to top if needed
+                document.getElementById("toTop")?.scrollIntoView({ behavior: "smooth" });
+            }
+
+        </script>
+
+
+
+
+        </body>
+
+        </html>

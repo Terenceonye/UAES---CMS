@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/assets/img/favicon.png" type="image/x-icon">
+    <title>Lecturer Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .text-primary {
+            color: #0a82b8 !important;
+        }
+
+        input:focus,
+        select:focus,
+        button:focus,
+        .pagination-controls nav ul li a:focus {
+            box-shadow: none !important;
+            border-color: #0a82b8 !important;
+        }
+
+        .profile-container {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .profile-left {
+            background-color: #114b8b;
+            color: white;
+            padding: 2rem;
+            width: 300px;
+            text-align: center;
+        }
+
+        .profile-left img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 1rem;
+        }
+
+        .profile-left h4 {
+            font-weight: bold;
+        }
+
+        .profile-left .info {
+            margin-top: 1rem;
+            font-size: 14px;
+        }
+
+        .profile-left .info i {
+            margin-right: 8px;
+        }
+
+        .profile-right {
+            flex: 1;
+        }
+
+        #profileTabs {
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .nav-tabs .nav-link {
+            color: #114b8b;
+        }
+
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 3px solid #d1634a;
+            color: #d1634a;
+        }
+
+        .tab-content {
+            padding: 0.5rem 0;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        /* .tab-pane {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 8px;
+        } */
+
+        .tab-part {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab-part h5 {
+
+            color: #0a82b8;
+            margin-bottom: 1rem;
+        }
+
+
+        .tab-part ul li {
+            margin-bottom: 0.5rem
+        }
+
+        .tab-part ul li span {
+            display: block;
+        }
+
+        .tab-content p {
+            text-align: justify;
+        }
+
+
+
+        .custom-dotted-hr {
+            border: none;
+            height: 2px;
+            background-image: repeating-linear-gradient(to right,
+                    white,
+                    white 2px,
+                    transparent 6px,
+                    transparent 10px);
+            margin: 1rem 0;
+            width: 100%;
+        }
+
+        .idnumber {
+            background-color: white;
+            color: #d1634a;
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .fas.mt-1,
+        .fab.mt-1 {
+            background-color: rgba(255, 255, 255, 0.158);
+            color: #fff;
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                flex-direction: column;
+            }
+
+            .profile-left,
+            .profile-right {
+                width: 100%;
+            }
+        }
+
+        .back-link {
+            /* font-size: 14px; */
+            color: #0a82b8;
+            cursor: pointer;
+        }
+
+
+        /* SKELETON LOADER */
+
+        .skeleton {
+            background-color: #e2e2e2;
+            border-radius: 4px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .skeleton.text {
+            height: 14px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .skeleton.title {
+            height: 20px;
+            width: 60%;
+        }
+
+        .skeleton.circle {
+            border-radius: 50%;
+            height: 150px;
+            width: 150px;
+            margin: 0 auto 1rem;
+        }
+
+        .skeleton.line {
+            height: 14px;
+            margin: 8px 0;
+            width: 80%;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+
+        .bio-skeleton-line,
+        .bio-skeleton-title {
+            background-color: #e4e4e4;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bio-skeleton-line::after,
+        .bio-skeleton-title::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+            animation: bioShimmer 1.3s infinite;
+        }
+
+        .bio-skeleton-line {
+            height: 14px;
+        }
+
+        .bio-skeleton-title {
+            height: 18px;
+            width: 120px;
+        }
+
+        @keyframes bioShimmer {
+            100% {
+                left: 100%;
+            }
+        }
+
+
+
+        .base-info div a {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container my-5">
+
+        <!-- back link -->
+
+        <div class="d-flex align-items-center my-3 back-link">
+            <a onclick="history.back()" class="text-decoration-none text-primary">
+                <i class="fas fa-arrow-left me-2"></i>Go Back
+            </a>
+        </div>
+
+
+        <div class="mb-4">
+
+            <div class="profile-container gx-3">
+
+
+                <div id="profileLeftSkeleton" class="profile-left rounded">
+                    <!-- Skeleton content will be injected here -->
+                </div>
+
+
+
+
+                <div id="profileLeft" class="profile-left rounded" style="display: none;">
+                    <img id="profileImage" src="website-assets/img/person/avatar.png" alt="Mayor Terence"
+                        class="img-fluid rounded-circle bg-light" />
+                    <h4>
+                        <span class="small d-block" style="font-size: 14px; font-weight: normal;" id="title">DR.</span>
+                        <span id="fullName"></span>
+                    </h4>
+                    <hr class="custom-dotted-hr" />
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-user-lock idnumber me-2"></i>
+                        <span id="degTitle">1000-0003-1247-613X</span>
+                    </div>
+                    <hr class="custom-dotted-hr" />
+                    <div class="text-start base-info">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-briefcase me-2 mt-1"></i>
+                            <span id="position"></span>
+                        </div>
+                        <hr class="custom-dotted-hr" />
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-phone me-2 mt-1"></i>
+                            <span id="phone" style=" filter: blur(5px);"></span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-envelope me-2 mt-1"></i>
+                            <span id="email"></span>
+                        </div>
+                        <!-- <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-map-marker-alt me-2 mt-1"></i>
+                            <span id="college"></span>
+                        </div> -->
+                        <hr class="custom-dotted-hr" />
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-network-wired me-2 mt-1"></i>
+                            <span>Collaboration Network</span>
+                        </div>
+                        <hr class="custom-dotted-hr" />
+                        <div class="d-flex align-items-center mb-2" title="Affiliation">
+                            <i class="fas fa-university me-2 mt-1"></i>
+                            <!-- <span id="affiliation"></span> -->
+                            <a href="javascript:void(0)" id="affiliation">Affiliation</a>
+
+                        </div>
+                        <div class="d-flex align-items-center mb-2" title="Collaboraton">
+                            <i class="fas fa-network-wired me-2 mt-1"></i>
+                            <!-- <span id="collaboration"></span> -->
+                            <a href="javascript:void(0)" id="collaboration">Collaboration Network</a>
+                        </div>
+                        <div class="d-flex align-items-center mb-2" title="Google Scholar">
+                            <i class="fab fa-google me-2 mt-1"></i>
+                            <!-- <span id="googleScholar"></span> -->
+                            <a href="javascript:void(0)" id="googleScholar">Google Scholar</a>
+                        </div>
+                        <div class="d-flex align-items-center mb-2" title="Research Gate">
+                            <i class="fab fa-researchgate me-2 mt-1"></i>
+                            <!-- <span id="researchGate">Research Gate</span> -->
+                            <a href="javascript:void(0)" id="researchGate">Research Gate</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="profile-right rounded">
+                    <div class="position-relative">
+                        <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
+                            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab"
+                                    data-bs-target="#about">ABOUT</button></li>
+                            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab"
+                                    data-bs-target="#research-outputs">RESEARCH OUTPUTS</button></li>
+                            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab"
+                                    data-bs-target="#research">RESEARCH</button></li>
+                            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab"
+                                    data-bs-target="#professional">PROFESSIONAL</button></li>
+                            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab"
+                                    data-bs-target="#teaching">TEACHING</button></li>
+
+                            <!-- Dropdown tab for smaller screens -->
+                            <li class="nav-item dropdown d-none" id="moreTabs">
+                                <button class="nav-link dropdown-toggle" data-bs-toggle="dropdown">More</button>
+                                <ul class="dropdown-menu dropdown-menu-end"></ul>
+                            </li>
+                        </ul>
+                    </div>
+
+
+
+
+                    <style>
+                        #profileTabs {
+                            flex-wrap: nowrap;
+                            overflow: visible;
+                        }
+
+                        .dropdown-menu {
+                            z-index: 1050;
+                        }
+
+                        .dropdown-menu {
+                            z-index: 1050;
+                        }
+                    </style>
+
+                    </style>
+
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="about">
+
+                            <!-- Skeleton loader for BIO and DEGREE -->
+                            <div id="bioSkeleton">
+                                <div class="tab-part">
+                                    <div class="bio-skeleton-title" style="width: 100px;"></div>
+                                    <div class="bio-skeleton-line" style="width: 90%;"></div>
+                                    <div class="bio-skeleton-line" style="width: 100%;"></div>
+                                    <div class="bio-skeleton-line" style="width: 80%;"></div>
+                                </div>
+                                <div class="tab-part">
+                                    <div class="bio-skeleton-title" style="width: 100px;"></div>
+                                    <div class="bio-skeleton-line" style="width: 60%;"></div>
+                                    <div class="bio-skeleton-line" style="width: 50%;"></div>
+                                    <div class="bio-skeleton-line" style="width: 70%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Real content -->
+                            <div id="aboutContent" style="display: none;">
+                                <div class="tab-part">
+                                    <h5>BIO</h5>
+                                    <p id="bio"></p>
+                                </div>
+
+                                <div class="tab-part">
+                                    <h5>DEGREE</h5>
+                                    <ul id="degreeList"></ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="tab-pane fade" id="research-outputs">
+                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                                <!-- sort, pagination, and search (as already present) -->
+                            </div>
+
+                            <!-- Injected Research Output Cards will appear here -->
+                            <div id="researchOutputsContainer"></div>
+                        </div>
+
+
+                        <div class="tab-pane fade" id="research">
+                            <!-- Research Interest Section -->
+                            <div class="tab-part">
+                                <!-- This will be populated by JS -->
+                            </div>
+
+                            <!-- Grants Section -->
+                            <div class="tab-part">
+                                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                                    <h5 class="mb-3">GRANTS</h5>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+
+                                </div>
+
+                                <!-- Grant cards will be dynamically inserted here by JS -->
+                            </div>
+                        </div>
+
+
+                        <div class="tab-pane fade" id="professional">
+                            <div class="tab-part"></div>
+                        </div>
+
+                        <div class="tab-pane fade" id="teaching">
+                            <div class="tab-part">
+                                <!-- ALL THE STATIC CONTENT INCLUDING SORT, SEARCH, AND CARDS -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const tabList = document.getElementById('profileTabs');
+                const tabItems = Array.from(tabList.querySelectorAll('.nav-item:not(.dropdown)'));
+                const moreTabs = document.getElementById('moreTabs');
+                const dropdownMenu = moreTabs.querySelector('.dropdown-menu');
+
+                function updateTabsForScreen() {
+                    const screenWidth = window.innerWidth;
+
+                    // Reset
+                    tabItems.forEach(tab => tab.classList.remove('d-none'));
+                    dropdownMenu.innerHTML = '';
+                    moreTabs.classList.add('d-none');
+
+                    if (screenWidth < 992) { // md and smaller
+                        const visibleTabs = tabItems.slice(0, 2);
+                        const hiddenTabs = tabItems.slice(2);
+
+                        hiddenTabs.forEach(tab => {
+                            tab.classList.add('d-none');
+
+                            const btn = tab.querySelector('button');
+                            const newItem = document.createElement('li');
+                            newItem.innerHTML = `<button class="dropdown-item" data-bs-toggle="tab" data-bs-target="${btn.dataset.bsTarget}">${btn.textContent}</button>`;
+                            dropdownMenu.appendChild(newItem);
+                        });
+
+                        if (hiddenTabs.length > 0) {
+                            moreTabs.classList.remove('d-none');
+                        }
+                    }
+                }
+
+                window.addEventListener('resize', updateTabsForScreen);
+                updateTabsForScreen();
+            });
+        </script>
+
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const profileLeftSkeleton = document.getElementById("profileLeftSkeleton");
+                if (profileLeftSkeleton) {
+                    profileLeftSkeleton.innerHTML = `
+                <div class="skeleton circle"></div>
+                <div class="skeleton title"></div>
+                <hr class="custom-dotted-hr" />
+                <div class="skeleton line"></div>
+                <hr class="custom-dotted-hr" />
+                <div class="skeleton line"></div>
+                <div class="skeleton line"></div>
+                <hr class="custom-dotted-hr" />
+                <div class="skeleton line"></div>
+
+                <div class="skeleton line"></div>
+                <div class="skeleton line"></div>
+                <hr class="custom-dotted-hr" />
+                <div class="skeleton line"></div>
+            `;
+                }
+
+
+                document.getElementById("bioSkeleton").style.display = "block";
+                document.getElementById("aboutContent").style.display = "none";
+
+            });
+        </script>
+
+
+
+
+
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", async () => {
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get("id");
+
+                if (!id) {
+                    document.getElementById("profile-container").innerHTML = "<p class='text-danger'>No staff ID provided.</p>";
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/api/staff?id=${id}`);
+                    const result = await res.json();
+
+
+
+
+                    if (!result.success || !result.staff) {
+                        throw new Error("Staff not found.");
+                    }
+
+                    const staff = result.staff;
+
+                    // console.log("This staff is", staff)
+
+                    // document.getElementById('profileImage').src = staff.profileImage?.url
+                    // document.getElementById('title').textContent = staff.title
+                    // document.getElementById("fullName").textContent = staff.fullName.toUpperCase();
+                    // document.getElementById("position").textContent = staff.position
+                    // document.getElementById("degTitle").textContent = staff.idNumber || 'N/A';
+                    // document.getElementById("phone").textContent = staff.phone
+                    // document.getElementById("email").textContent = staff.email
+
+
+                    // document.getElementById('affiliation').href = staff.affiliation || 'N/A'
+                    // document.getElementById('collaboration').href = staff.externalLinks?.collaborationNetwork || 'N/A'
+                    // document.getElementById('googleScholar').href = staff.externalLinks?.googleScholar || 'N/A';
+                    // document.getElementById('researchGate').href = staff.externalLinks?.researchGate || 'N/A'
+
+
+
+
+
+
+                    function populateProfileSidebar(staff) {
+                        if (!staff) return;
+
+                        // Profile image
+                        const profileImage = document.getElementById('profileImage');
+                        profileImage.src = staff.profileImage?.url || 'website-assets/img/person/avatar.png';
+                        profileImage.alt = staff.fullName || 'Profile Photo';
+
+                        // Title and full name
+                        document.getElementById('title').textContent = staff.title || '';
+                        document.getElementById('fullName').textContent = staff.fullName || '';
+
+                        // Position
+                        document.getElementById('position').textContent = staff.position || '';
+
+                        // Phone, email, and address
+                        document.getElementById('phone').textContent = staff.phone || '';
+                        document.getElementById('email').textContent = staff.email || '';
+                        // document.getElementById('college').textContent = staff.address || '';
+
+                        // Affiliation
+                        document.getElementById('affiliation').href = staff.affiliation || 'javascritp:void(0)';
+                        // External Links
+                        document.getElementById('collaboration').href = staff.externalLinks?.collaborationNetwork || 'javascritp:void(0)';
+                        document.getElementById('googleScholar').href = staff.externalLinks?.googleScholar || 'javascritp:void(0)';
+                        document.getElementById('researchGate').href = staff.externalLinks?.researchGate || 'javascritp:void(0)';
+
+
+                        document.getElementById("degTitle").textContent = staff.idNumber || 'N/A';
+                        document.getElementById('bio').textContent = staff.about.bio || 'No bio available';
+                    }
+
+
+
+                    // Populate degrees
+                    const degreeList = document.getElementById("degreeList");
+                    degreeList.innerHTML = "";
+
+                    staff.about.degrees.forEach(degree => {
+                        const li = document.createElement("li");
+
+                        const [title, degName] = degree.split(" - ");
+
+                        const strong = document.createElement("strong");
+                        strong.textContent = title.trim();
+
+                        const span = document.createElement("span");
+                        span.className = "d-block";
+                        span.textContent = degName?.trim() || "";
+
+                        li.appendChild(strong);
+                        li.appendChild(span);
+                        degreeList.appendChild(li);
+                    });
+
+
+
+
+                    // Populate the profile sidebar
+                    populateProfileSidebar(staff);
+
+                    // Populate Research Outputs
+                    renderResearchOutputs(staff.researchOutputs);
+
+                    // Populate Research Interests and Grants
+                    populateResearchTab(staff.research);
+
+                    // Populate Professional Activities
+                    populateProfessionalActivities(staff.professionalActivities);
+
+                    // Populate Teaching Activities
+                    populateTeachingActivities(staff.teachingActivities || []);
+
+
+
+
+                    // REMOVE SKELETONS AND DISPLAY FETCHED CONTENTS
+                    document.getElementById("profileLeftSkeleton").style.display = "none";
+                    document.getElementById("profileLeft").style.display = "block";
+
+                    document.getElementById("bioSkeleton").style.display = "none";
+                    document.getElementById("aboutContent").style.display = "block";
+
+
+
+                } catch (err) {
+                    console.error("Error loading profile:", err);
+                    document.getElementById("profile-container").innerHTML = "<p class='text-danger'>Failed to load profile.</p>";
+                }
+            });
+
+
+
+
+            function renderResearchOutputs(outputs) {
+                const container = document.getElementById("researchOutputsContainer");
+                container.innerHTML = ""; // Clear any existing content
+
+                outputs.forEach(output => {
+                    const collaborators = output.collaborators.join(", ");
+                    const dateStr = new Date(output.date).toLocaleDateString("en-GB", {
+                        day: "numeric", month: "short", year: "numeric"
+                    });
+
+                    const card = `
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="text-uppercase text-primary small mb-1">Research Output</div>
+          <h6 class="card-title">${output.title}</h6>
+          <div class="text-muted small mb-2">
+            ${dateStr}
+          </div>
+          <div class="text-muted small mb-2">
+            <i class="fas fa-user me-2"></i>${collaborators}
+          </div>
+          <div class="d-flex flex-wrap gap-3 mt-2">
+            <a href="${output.pdfUrl}" target="_blank" class="btn btn-outline-danger btn-sm">
+              <i class="fas fa-file-pdf me-1"></i>VIEW PDF
+            </a>
+            <a href="${output.pdfUrl}" download class="btn btn-outline-secondary btn-sm">
+              <i class="fas fa-link me-1"></i>Download PDF
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+
+                    container.insertAdjacentHTML("beforeend", card);
+                });
+            }
+
+
+
+            // Research Interests and grants
+            function populateResearchTab(researchData) {
+                const interests = researchData.interests || [];
+                const grants = researchData.grants || [];
+
+                // === Populate RESEARCH INTEREST ===
+                const researchTab = document.querySelector('#research .tab-part:first-child');
+                researchTab.innerHTML = `
+    <h5>RESEARCH INTEREST</h5>
+    ${interests.map(interest => `<p>${interest}</p>`).join("")}
+  `;
+
+                // === Populate GRANTS ===
+                const grantContainer = document.querySelector('#research .tab-part:nth-child(2)');
+
+                // Grant Cards
+                const grantCards = grants.map(grant => {
+                    const date = new Date(grant.date).toLocaleDateString("en-GB", {
+                        year: "numeric", month: "short", day: "numeric"
+                    });
+
+                    return `
+      <div class="card mb-3 shadow-sm border-1">
+        <div class="card-body">
+          <div class="text-uppercase text-primary small mb-1">GRANT</div>
+          <h6 class="card-title">${grant.title}</h6>
+          <div class="text-muted small mb-2">${grant.tag} &nbsp; • &nbsp; ${date}</div>
+          <p class="mb-1 text-muted">${grant.description}</p>
+        </div>
+      </div>
+    `;
+                }).join("");
+
+                // Insert Grant Cards after the filter controls
+                const controls = grantContainer.querySelectorAll('.d-flex.justify-content-between.align-items-center');
+                const insertAfter = controls[1]; // second row (sort + pagination)
+                insertAfter.insertAdjacentHTML('afterend', grantCards);
+            }
+
+
+
+            // Populate Professional Activities
+            function populateProfessionalActivities(professionalActivities = []) {
+                const container = document.querySelector('#professional .tab-part');
+
+                if (!container) return;
+
+                // Clear existing content
+                container.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+            <h5 class="mb-3">PROFESSIONAL ACTIVITIES</h5>
+            
+        </div>
+        
+    `;
+
+                // Append cards
+                professionalActivities.forEach(activity => {
+                    const dateStr = new Date(activity.date).toLocaleDateString('en-GB', {
+                        day: '2-digit', month: 'short', year: 'numeric'
+                    });
+
+                    const card = document.createElement('div');
+                    card.className = 'card mb-3 shadow-sm border-1';
+                    card.innerHTML = `
+            <div class="card-body">
+                <div class="text-uppercase text-primary small mb-1">${activity.type || 'PROFESSIONAL ACTIVITY'}</div>
+                <h6 class="card-title">${activity.title}</h6>
+                <div class="text-muted small mb-2">${dateStr}</div>
+                <p class="mb-1 text-muted">${activity.description}</p>
+            </div>
+        `;
+
+                    container.appendChild(card);
+                });
+            }
+
+
+
+
+            //populateTeachingActivities(activities = []) {
+            function populateTeachingActivities(teachingActivities = []) {
+                const container = document.querySelector('#teaching .tab-part');
+                if (!container) return;
+
+                // Clear and set the structure
+                container.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+            <h5 class="mb-3">TEACHING ACTIVITIES</h5>
+           
+        </div>
+       
+    `;
+
+                // Create and append cards
+                teachingActivities.forEach(activity => {
+                    const start = new Date(activity.startDate).toLocaleDateString('en-GB', {
+                        day: '2-digit', month: 'short', year: 'numeric'
+                    });
+                    const end = new Date(activity.endDate).toLocaleDateString('en-GB', {
+                        day: '2-digit', month: 'short', year: 'numeric'
+                    });
+
+                    const card = document.createElement('div');
+                    card.className = 'card mb-3 shadow-sm border-1';
+                    card.innerHTML = `
+            <div class="card-body">
+                <div class="text-uppercase text-primary small mb-1">${activity.tag || 'MODULE COORDINATED'}</div>
+                <h6 class="card-title">${activity.title}</h6>
+                <div class="text-muted small mb-2">${start} - ${end}</div>
+                <a href="${activity.link}" target="_blank" class="text-decoration-none small fw-semibold text-muted">
+                    LEARN MORE<i class="fas fa-link ms-1"></i>
+                </a>
+            </div>
+        `;
+
+                    container.appendChild(card);
+                });
+            }
+
+        </script>
+
+
+
+
+
+
+</body>
+
+</html>

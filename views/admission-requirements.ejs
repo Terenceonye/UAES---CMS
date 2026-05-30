@@ -1,0 +1,523 @@
+<%- include("websitepartials/header") %>
+<main class="main">
+  <style>
+    .school-number,
+    .bi-check {
+      color: #0a82b8;
+      /* Set the number color to my secondary theme color */
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .download-btn {
+      background-color: #0a82b8;
+      color: white;
+      padding: 10px 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      border-radius: 4px;
+    }
+
+    .download-btn:hover {
+      background-color: #04628d;
+      color: white;
+    }
+
+    li {
+      line-height: 1.9rem;
+    }
+
+    .fa-check {
+      color: #0a82b8;
+      font-weight: bold;
+
+      margin-right: 10px;
+    }
+
+    .bg-white {
+      background-color: transparent !important;
+    }
+  </style>
+
+  <!-- Page Title -->
+  <div
+    class="page-title dark-background"
+    style="
+      background-image: url(website-assets/img/gallery/Dr-Basilia-Igbokwe3.jpg);
+    "
+  >
+    <div class="container position-relative">
+      <h1>Academics</h1>
+      <p>Adminssion Requirements</p>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li class="current">Academics</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <!-- End Page Title -->
+  <!-- End Hero Area -->
+
+  <div class="container">
+    <!-- Admission Requirements Section -->
+    <section class="my-5 py-4 bg-white" id="admission-requirement">
+      <div class="head-box text-center">
+        <h2 class="mytext">Admission Requirements</h2>
+      </div>
+      <!-- HND Requirements -->
+      <div class="my-5" data-aos="fade-right">
+        <h3 class="fw-bold">Higher National Diploma (HND) – 2 Years</h3>
+        <ul class="list-group">
+          <li class="list-group-item d-flex">
+            <div class="me-3">
+              <i class="bi bi-check"></i>
+            </div>
+            <div>
+              Candidates must hold the minimum entry requirements for ND
+              Programme in the Federal Polytechnic, Nekede as in each school
+              below.
+            </div>
+          </li>
+          <li class="list-group-item d-flex">
+            <div class="me-3">
+              <i class="bi bi-check"></i>
+            </div>
+            <div>
+              They must possess the National Diploma of the University of
+              Innovation, Science and Technology, Omuma, Owerri, or the
+              equivalent from recognized institutions in the appropriate
+              discipline with a minimum of lower credit pass (CGPA 2.50).
+            </div>
+          </li>
+          <li class="list-group-item d-flex">
+            <div class="me-3">
+              <i class="bi bi-check"></i>
+            </div>
+            <div>
+              For candidates with pass level and CGPA not below 2.00 points, a
+              minimum of two years post-ND cognate working experience is
+              required (Applicable to Federal Polytechnic Nekede (ND) Graduates
+              ONLY).
+            </div>
+          </li>
+          <li class="list-group-item d-flex">
+            <div class="me-3">
+              <i class="bi bi-check"></i>
+            </div>
+            <div>
+              Candidates from other Institutions WITH PASS LEVEL WILL NOT BE
+              ADMITTED.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ND Requirements -->
+      <div class="" data-aos="fade-left">
+        <h3 class="fw-bold">National Diploma (ND) – 2 Years</h3>
+        <ul class="list-group">
+          <li class="list-group-item d-flex">
+            <div class="me-3">
+              <i class="bi bi-check"></i>
+            </div>
+            <div>Candidates must score a minimum of 140 in JAMB.</div>
+          </li>
+          <li class="list-group-item d-flex">
+            <div class="me-3">
+              <i class="bi bi-check"></i>
+            </div>
+            <div>
+              Candidates with awaiting O’level results are not qualified to
+              apply.
+            </div>
+          </li>
+          <li class="list-group-item d-flex">
+            <div class="me-3">
+              <i class="bi bi-check"></i>
+            </div>
+            <div>
+              They must have at least five (5) O’level Credits in relevant
+              subjects which must not be obtained in more than two sittings.
+              English Language and Mathematics are compulsory in all courses.
+            </div>
+          </li>
+          <li class="list-group-item d-flex">
+            <div class="me-3">
+              <i class="bi bi-check"></i>
+            </div>
+            <div>
+              Combining NABTEB and WAEC or NECO is not acceptable. NABTEB can
+              only be combined with NABTEB, while NECO can be combined with
+              WAEC.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Schools and Departments Section -->
+    <section class="my-5 bg-white" id="schools-departments">
+      <div
+        class="head-box text-center"
+        data-aos="fade-right"
+        data-aos-duration="1500"
+        data-aos-offset="200"
+      >
+        <h2 class="mytext">Schools and Departments</h2>
+      </div>
+
+      <!-- Schools -->
+      <div class="accordion my-4 pb-5" id="schoolsAccordion">
+        <!-- School of Agriculture -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingAgriculture">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseAgriculture"
+              aria-expanded="true"
+              aria-controls="collapseAgriculture"
+            >
+              <span class="school-number">1.</span> School of Agriculture and
+              Agricultural Technology
+            </button>
+          </h2>
+          <div
+            id="collapseAgriculture"
+            class="accordion-collapse collapse show"
+            aria-labelledby="headingAgriculture"
+            data-bs-parent="#schoolsAccordion"
+          >
+            <div class="accordion-body">
+              <ul>
+                <li>Agricultural Technology</li>
+                <li>Animal Health and Production Technology</li>
+                <li>Crop Production Technology</li>
+                <li>Fisheries Technology</li>
+              </ul>
+              <a
+                href="website-assets/img/requirements/SCHOOL OF AGRICULTURE AND AGRICULTURAL TECHNOLOGY (SAAT).pdf"
+                target="_blank"
+                class="btn btn-sm mt-3 download-btn btn-primary"
+                target="_blank"
+              >
+                <i class="bi bi-download"></i> View/Download Requirements
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- School of Business -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingBusiness">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseBusiness"
+              aria-expanded="false"
+              aria-controls="collapseBusiness"
+            >
+              <span class="school-number">2.</span> School of Business and
+              Management Technology
+            </button>
+          </h2>
+          <div
+            id="collapseBusiness"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingBusiness"
+            data-bs-parent="#schoolsAccordion"
+          >
+            <div class="accordion-body">
+              <ul>
+                <li>Accountancy</li>
+                <li>Banking and Finance</li>
+                <li>Business Administration</li>
+                <li>Co-operative Economics and Management</li>
+                <li>Marketing</li>
+                <li>Office Technology and Management</li>
+                <li>Procurement and Supply Chain Management</li>
+                <li>Public Administration</li>
+                <li>Taxation</li>
+              </ul>
+              <a
+                href="website-assets/img/requirements/SCHOOL OF BUSINESS AND MANAGEMENT TECHNOLOGY (SBMT).pdf"
+                target="_blank"
+                class="btn btn-sm mt-3 download-btn"
+              >
+                <i class="bi bi-download"></i> View/Download Requirements
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- School of Engineering Technology -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingEngineering">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseEngineering"
+              aria-expanded="false"
+              aria-controls="collapseEngineering"
+            >
+              <span class="school-number">3.</span> School of Engineering
+              Technology
+            </button>
+          </h2>
+          <div
+            id="collapseEngineering"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingEngineering"
+            data-bs-parent="#schoolsAccordion"
+          >
+            <div class="accordion-body">
+              <ul>
+                <li>Agricultural/Bio Environmental Technology</li>
+                <li>Chemical Engineering</li>
+                <li>Civil Engineering</li>
+                <li>Computer Engineering</li>
+                <li>Electrical/Electronic Technology</li>
+                <li>Hydrology</li>
+                <li>Material and Metallurgical Engineering</li>
+                <li>Mechanical Engineering</li>
+                <li>Mechatronics Engineering</li>
+                <li>Minerals and Petroleum Resources Engineering Technology</li>
+                <li>Welding and Fabrication Engineering Technology</li>
+              </ul>
+              <a
+                href="website-assets/img/requirements/SCHOOL OF ENGINEERING TECHNOLOGY (SET).pdf"
+                target="_blank"
+                class="btn btn-sm mt-3 download-btn"
+                ><i class="bi bi-download"></i> View/Download Requirements</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- School of Environmental and Design Technology -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingEnvironmental">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseEnvironmental"
+              aria-expanded="false"
+              aria-controls="collapseEnvironmental"
+            >
+              <span class="school-number">4.</span> School of Environmental and
+              Design Technology
+            </button>
+          </h2>
+          <div
+            id="collapseEnvironmental"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingEnvironmental"
+            data-bs-parent="#schoolsAccordion"
+          >
+            <div class="accordion-body">
+              <ul>
+                <li>Architectural Technology</li>
+                <li>Arts and Design</li>
+                <li>Building-Technology</li>
+                <li>Estate Management</li>
+                <li>Fine & Applied Arts</li>
+                <li>Hospitality Management</li>
+                <li>Quantity-Surveying</li>
+                <li>Surveying and Geo-Informatics</li>
+                <li>Town and Regional Planning</li>
+                <li>Transportation Service</li>
+                <li>Urban and Regional Planning</li>
+              </ul>
+              <a
+                href="website-assets/img/requirements/SCHOOL OF ENVIRONMENTAL DESIGN AND TECHNOLOGY (SEDT).pdf"
+                target="_blank"
+                class="btn btn-sm mt-3 download-btn"
+                ><i class="bi bi-download"></i> View/Download Requirements</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- School of General Studies -->
+        <div
+          class="accordion-item"
+          data-aos="fade-right"
+          data-aos-duration="1600"
+        >
+          <h2 class="accordion-header" id="headingGeneralStudies">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseGeneralStudies"
+              aria-expanded="false"
+              aria-controls="collapseGeneralStudies"
+            >
+              <span class="school-number">5.</span> School of General Studies
+            </button>
+          </h2>
+          <div
+            id="collapseGeneralStudies"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingGeneralStudies"
+            data-bs-parent="#schoolsAccordion"
+          >
+            <div class="accordion-body">
+              <ul>
+                <li>Humanities</li>
+                <li>Mass Communication</li>
+                <li>Social Science</li>
+              </ul>
+              <a href="javascript:void(0)" class="btn btn-sm mt-3 download-btn"
+                ><i class="bi bi-download"></i> View/Download Requirements</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- School of Health and Related Technology -->
+        <div
+          class="accordion-item"
+          data-aos="fade-right"
+          data-aos-duration="2000"
+        >
+          <h2 class="accordion-header" id="headingHealth">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseHealth"
+              aria-expanded="false"
+              aria-controls="collapseHealth"
+            >
+              <span class="school-number">6.</span> School of Health and Related
+              Technology
+            </button>
+          </h2>
+          <div
+            id="collapseHealth"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingHealth"
+            data-bs-parent="#schoolsAccordion"
+          >
+            <div class="accordion-body">
+              <ul>
+                <li>Dental Technology</li>
+                <li>Dispensing Opticianry</li>
+                <li>Environmental Health Technology</li>
+                <li>Pharmaceutical Technology</li>
+                <li>Public Nursing Technology</li>
+              </ul>
+              <a
+                href="website-assets/img/requirements/SCHOOL OF HEALTH AND TECHNOLOGY (SOHT).pdf"
+                target="_blank"
+                class="btn btn-sm mt-3 download-btn"
+                ><i class="bi bi-download"></i> View/Download Requirements</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- School of Industrial and Applied Science -->
+        <div
+          class="accordion-item"
+          data-aos="fade-right"
+          data-aos-duration="2400"
+        >
+          <h2 class="accordion-header" id="headingIndustrial">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseIndustrial"
+              aria-expanded="false"
+              aria-controls="collapseIndustrial"
+            >
+              <span class="school-number">7.</span> School of Industrial and
+              Applied Science
+            </button>
+          </h2>
+          <div
+            id="collapseIndustrial"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingIndustrial"
+            data-bs-parent="#schoolsAccordion"
+          >
+            <div class="accordion-body">
+              <ul>
+                <li>Biology/Microbiology</li>
+                <li>Chemistry</li>
+                <li>Chemistry/Biochemistry</li>
+                <li>Environmental Biology</li>
+                <li>Fisheries Technology</li>
+                <li>Food Technology</li>
+                <li>Mathematics/Statistics</li>
+                <li>Microbiology/Biochemistry</li>
+                <li>Nutrition and Dietetics</li>
+                <li>Physics and Electronics</li>
+                <li>Science Laboratory Technology</li>
+              </ul>
+              <a
+                href="website-assets/img/requirements/SCHOOL OF INDUSTRIAL & APPLIED SCIENCES (SIAS).pdf"
+                target="_blank"
+                class="btn btn-sm mt-3 download-btn"
+                ><i class="bi bi-download"></i> View/Download Requirements</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- School of Information and Communications Technology -->
+        <div
+          class="accordion-item"
+          data-aos="fade-right"
+          data-aos-duration="2700"
+        >
+          <h2 class="accordion-header" id="headingICT">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseICT"
+              aria-expanded="false"
+              aria-controls="collapseICT"
+            >
+              <span class="school-number">8.</span> School of Information and
+              Communications Technology
+            </button>
+          </h2>
+          <div
+            id="collapseICT"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingICT"
+            data-bs-parent="#schoolsAccordion"
+          >
+            <div class="accordion-body">
+              <ul>
+                <li>Computer Science</li>
+                <li>Library and Information Science</li>
+              </ul>
+              <a
+                href="website-assets/img/requirements/SCHOOL OF INFORMATION AND COMMUNICATION TECHNOLOGY (SICT).pdf"
+                target="_blank"
+                class="btn btn-sm mt-3 download-btn"
+                ><i class="bi bi-download"></i> View/Download Requirements</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Add other schools similarly -->
+      </div>
+    </section>
+  </div>
+</main>
+<%- include("websitepartials/footer") %>

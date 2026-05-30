@@ -1,0 +1,245 @@
+<%- include("websitepartials/header") %>
+<main class="main">
+  <!-- Page Title -->
+  <div
+    class="page-title dark-background"
+    style="
+      background-image: url(website-assets/img/gallery/Dr-Basilia-Igbokwe3.jpg);
+    "
+  >
+    <div class="container position-relative">
+      <h1>Contact</h1>
+      <p>
+        Whether you are a current student, prospective student, alumni, or a
+        member of the community, our team is dedicated to providing you with the
+        information and assistance you require.
+      </p>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li class="current">Contact</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <!-- End Page Title -->
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <!-- Contact Info Boxes -->
+      <div class="row gy-4 mb-5">
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="contact-info-box">
+            <div class="icon-box">
+              <i class="bi bi-geo-alt"></i>
+            </div>
+            <div class="info-content">
+              <h4>Our Address</h4>
+              <p>Federal Polytechnic, Nekede. P.M.B 1036 Nekede, Imo State</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="contact-info-box">
+            <div class="icon-box">
+              <i class="bi bi-envelope"></i>
+            </div>
+            <div class="info-content">
+              <h4>Email Address</h4>
+              <p>registrar@imopoly.edu.ng</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="contact-info-box">
+            <div class="icon-box">
+              <i class="bi bi-headset"></i>
+            </div>
+            <div class="info-content">
+              <h4>Hot Line</h4>
+              <p>+234 811-869-1549</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google Maps (Full Width) -->
+    <div class="map-section" data-aos="fade-up" data-aos-delay="200">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15887.553159573856!2d7.030115!3d5.433934!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10425f410d4f7d81%3A0xba9c4eca831428ee!2sFederal%20Polytechnic%20Nekede%20Owerri!5e0!3m2!1sen!2sus!4v1748502717677!5m2!1sen!2sus"
+        width="600"
+        height="450"
+        style="border: 0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+
+    <!-- Contact Form Section (Overlapping) -->
+    <div class="container form-container-overlap">
+      <div
+        class="row justify-content-center"
+        data-aos="fade-up"
+        data-aos-delay="300"
+      >
+        <div class="col-lg-10">
+          <div class="contact-form-wrapper">
+            <h2 class="text-center mb-4">Get in Touch</h2>
+
+            <form class="php-email-form">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="input-with-icon">
+                      <i class="bi bi-person"></i>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="fullName"
+                        name="name"
+                        placeholder="First Name"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="input-with-icon">
+                      <i class="bi bi-envelope"></i>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        placeholder="Email Address"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <div class="input-with-icon">
+                      <i class="bi bi-text-left"></i>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="subject"
+                        name="sbject"
+                        placeholder="Subject"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="form-group">
+                    <div class="input-with-icon">
+                      <i class="bi bi-chat-dots message-icon"></i>
+                      <textarea
+                        class="form-control"
+                        id="message"
+                        name="message"
+                        placeholder="Write Message..."
+                        style="height: 180px"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 text-center">
+                  <button type="submit" class="btn btn-primary btn-submit">
+                    SEND MESSAGE
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /Contact Section -->
+</main>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  document
+    .querySelector(".php-email-form")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const subject = document.getElementById("subject").value.trim();
+      const message = document.getElementById("message").value.trim();
+      const submitBtn = document.querySelector(".btn-submit");
+
+      // Basic validation
+      if (!fullName || !email || !subject || !message) {
+        return Swal.fire({
+          icon: "warning",
+          title: "Incomplete Form",
+          text: "Please fill in all the fields before submitting.",
+        });
+      }
+
+      // Prepare data
+      const payload = {
+        fullName,
+        email,
+        subject,
+        message,
+      };
+
+      try {
+        submitBtn.innerHTML = `SENDING... <i class="fas fa-spin fa-spinner"></i>`;
+        submitBtn.disabled = true;
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "Message Sent",
+            text: "Your message has been sent successfully!",
+          });
+          form.reset(); // Clear form
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = "SEND MESSAGE";
+        } else {
+          const err = await res.json();
+          Swal.fire({
+            icon: "error",
+            title: "Failed to Send",
+            text: err.message || "An error occurred. Please try again later.",
+          });
+
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = "SEND MESSAGE";
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Server Error",
+          text: "Could not connect to the server. Please try again later.",
+        });
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "SEND MESSAGE";
+      }
+    });
+</script>
+
+<%- include("websitepartials/footer") %>

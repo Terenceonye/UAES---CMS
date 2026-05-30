@@ -1,0 +1,30 @@
+UISTOdatabase >
+  db.createUser({
+    user: "adminuser",
+    pwd: "terenceonye",
+    roles: [{ role: "readWrite", db: "UISTOdatabase" }],
+  });
+
+
+
+  mongodb://UISTOuser:terenceonye@67.211.221.73:27017/UISTOdatabase
+
+  mongosh "mongodb://UISTOuser:terenceonye@127.0.0.1:27017/UISTOdatabase"
+
+
+  MONGODB_URI=mongodb://UISTOuser:terenceonye@127.0.0.1:27017/UISTOdatabase
+
+
+  location / {
+    proxy_pass http://127.0.0.1:5000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+}
+
+@Temidayo25
+
+
+/etc/nginx/nginx.conf

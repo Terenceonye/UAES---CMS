@@ -1,0 +1,148 @@
+<%- include('partials/header-sidebar') %>
+
+    <div class="page-wrapper" id="toTop">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Manage Events</h4>
+                    <h6>Add Event</h6>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="eventTitle">Event Title</label>
+                                <input type="text" id="eventTitle" class="form-control" placeholder="Enter Event Title">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="eventDate">Date</label>
+                                <input type="date" id="eventDate" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="startTime">Start Time</label>
+                                <input type="time" id="startTime" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="endTime">End Time</label>
+                                <input type="time" id="endTime" class="form-control">
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="eventLocation">Location</label>
+                                <input type="text" id="eventLocation" class="form-control"
+                                    placeholder="Enter Event Location">
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="eventDescription">Description</label>
+                                <textarea id="eventDescription" class="form-control"
+                                    placeholder="Enter Event Description"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <a href="javascript:void(0);" id="createEventBtn" class="btn btn-submit me-2">Create
+                                Event</a>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include("partials/footer") %>
+
+        <script>
+            const createEventBtn = document.getElementById('createEventBtn');
+
+            createEventBtn.addEventListener('click', async () => {
+                const title = document.getElementById('eventTitle').value.trim();
+                const date = document.getElementById('eventDate').value.trim();
+                const startTime = document.getElementById('startTime').value.trim();
+                const endTime = document.getElementById('endTime').value.trim();
+                const location = document.getElementById('eventLocation').value.trim();
+                const description = document.getElementById('eventDescription').value.trim();
+
+                // Validate fields
+                if (!title || !date || !startTime || !endTime || !location || !description) {
+                    return Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Fields',
+                        text: 'Please fill in all fields.'
+                    });
+                }
+
+                // Add loading state
+                createEventBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating...`;
+                createEventBtn.disabled = true;
+
+                try {
+                    const res = await fetch('/api/events', {
+                        method: 'POST',
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ title, date, startTime, endTime, location, description })
+                    });
+
+                    const result = await res.json();
+
+                    if (res.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: result.message || 'Event created successfully.'
+                        });
+                        cancelUpdate(); // Clear form
+                    } else {
+                        throw new Error(result.message || 'Something went wrong.');
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message
+                    });
+                } finally {
+                    createEventBtn.innerHTML = 'Create Event';
+                    createEventBtn.disabled = false;
+                }
+            });
+
+            function cancelUpdate() {
+                document.getElementById('eventTitle').value = '';
+                document.getElementById('eventDate').value = '';
+                document.getElementById('startTime').value = '';
+                document.getElementById('endTime').value = '';
+                document.getElementById('eventLocation').value = '';
+                document.getElementById('eventDescription').value = '';
+            }
+        </script>
+
+
+
+        </body>
+
+        </html>

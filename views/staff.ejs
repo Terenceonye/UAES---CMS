@@ -1,0 +1,1416 @@
+<%- include("partials/header-sidebar")%>
+    <style>
+        legend {
+            font-weight: bolder;
+            font-size: 16px;
+            color: black;
+        }
+    </style>
+
+    <style>
+        .upload-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px 25px 30px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            text-align: center;
+            user-select: none;
+        }
+
+        .upload-card h5 {
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #222;
+        }
+
+        #profileImage {
+            display: none;
+        }
+
+        label[for="profileImage"] {
+            display: inline-block;
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background-color 0.3s ease, opacity 0.3s ease, cursor 0.3s ease;
+            box-shadow: 0 3px 6px rgba(74, 144, 226, 0.3);
+            user-select: none;
+        }
+
+        label[for="profileImage"]:hover {
+            background-color: #357ABD;
+        }
+
+        label[for="profileImage"].disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: #4a90e2;
+        }
+
+        #image-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 20px auto 0;
+            border-radius: 50%;
+            border: 4px solid #4a90e2;
+            overflow: hidden;
+            background: #e0e7ff;
+            box-shadow: 0 6px 18px rgba(74, 144, 226, 0.2);
+        }
+
+        #preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 50%;
+        }
+
+        canvas {
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        #message {
+            margin-top: 16px;
+            font-weight: 500;
+            color: #444;
+            font-size: 0.9rem;
+            min-height: 20px;
+            transition: color 0.3s ease;
+        }
+    </style>
+
+    <!-- Tom Select CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+
+
+
+    <div class="page-wrapper" id="toTop">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Manage Staff</h4>
+                    <h6>Add/Update/Delete Staff</h6>
+                </div>
+            </div>
+
+            <!-- =================  STAFF FORM  ================ -->
+            <form id="staffForm" enctype="multipart/form-data">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="row g-4">
+
+                            <!-- ===== SECTION: Academic Info ===== -->
+                            <fieldset class="border p-3">
+                                <legend class="w-auto px-2">UISTO Placement</legend>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="faculty" class="form-label">School</label>
+                                        <select id="faculty" name="faculty" class="form-select" required>
+                                            <option value="" selected>Select School</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="department" class="form-label">Department</label>
+                                        <select id="department" name="department" class="form-select" multiple required>
+
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="program" class="form-label">Program</label>
+                                        <select id="program" name="program" class="form-select" multiple required>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- ===== SECTION: Personal Info ===== -->
+
+                            <fieldset class="border p-3">
+                                <legend class="w-auto px-2">Personal Info</legend>
+                                <div class="row g-4 align-items-start">
+
+                                    <!-- Profile Image Upload (left column) -->
+                                    <div class="col-md-6">
+                                        <div
+                                            class="upload-card h-100 d-flex flex-column align-items-center justify-content-start">
+                                            <h5>Upload Profile Picture</h5>
+
+                                            <label for="profileImage" id="uploadLabel">Choose Image</label>
+                                            <input type="file" id="profileImage" name="profileImage" accept="image/*" />
+
+                                            <div id="image-container" class="mt-3">
+                                                <img id="preview" src="passport-photo.png" alt="Profile Preview" />
+                                            </div>
+
+                                            <div id="message" class="mt-3"></div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Text Inputs (right column) -->
+                                    <div class="col-md-6">
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <label for="fullName" class="form-label">Full Name</label>
+                                                <input id="fullName" name="fullName" class="form-control" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="title" class="form-label">Title</label>
+                                                <input id="title" name="title" class="form-control">
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="position" class="form-label">Position</label>
+                                                <input id="position" name="position" class="form-control">
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label for="phone" class="form-label">Phone</label>
+                                                <input id="phone" name="phone" class="form-control">
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="email" class="form-label">Email</label>
+                                                <input id="email" name="email" type="email" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </fieldset>
+
+
+
+
+
+
+                            <!-- ===== SECTION: Qualifications & Interests ===== -->
+                            <fieldset class="border p-3">
+                                <legend class="w-auto px-2">Recognized Skills and Credentials.</legend>
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label">Certifications</label>
+                                        <div id="specializationContainer">
+                                            <div class="input-group mb-2 specialization-entry">
+                                                <input class="form-control specialization-input"
+                                                    placeholder="e.g. Machine Learning">
+                                                <button type="button"
+                                                    class="btn btn-success add-specialization">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label">Degrees <span class="text-danger">(e.g BSc - Computer
+                                                Engineering) — Make sure you seperate it with a hyphen
+                                                (-)</span></label>
+                                        <div id="degreesContainer">
+                                            <div class="input-group mb-2 degree-entry">
+                                                <input class="form-control degree-input"
+                                                    placeholder="e.g. BSc - (Physics)">
+                                                <button type="button" class="btn btn-success add-degree">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label">Research Interests</label>
+                                        <div id="researchInterestsContainer">
+                                            <div class="input-group mb-2 interest-entry">
+                                                <input class="form-control interest-input"
+                                                    placeholder="e.g. Quantum Computing">
+                                                <button type="button" class="btn btn-success add-interest">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+
+                            <!-- ===== SECTION: External Links ===== -->
+                            <fieldset class="border p-3">
+                                <legend class="w-auto px-2">Collaboration Networks (External Links)</legend>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="googleScholar" class="form-label">Google Scholar</label>
+                                        <input id="googleScholar" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="researchGate" class="form-label">ResearchGate</label>
+                                        <input id="researchGate" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="collaborationNetwork" class="form-label">Collaboration
+                                            Network</label>
+                                        <input id="collaborationNetwork" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="affiliation" class="form-label">Affiliation</label>
+                                        <input id="affiliation" name="affiliation" class="form-control">
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- ===== SECTION: Biography ===== -->
+                            <fieldset class="border p-3">
+                                <legend class="w-auto px-2">Short Bio</legend>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <textarea id="bio" class="form-control" rows="4"></textarea>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+
+                            <!-- ===== SECTION: Research Outputs ===== -->
+                            <fieldset class="border p-3">
+                                <legend class="w-auto px-2">Research Outputs</legend>
+                                <div id="researchOutputsContainer">
+                                    <div class="row mb-2 research-output-entry">
+                                        <div class="col-md-4">
+                                            <input class="form-control ro-title" placeholder="Title">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="date" class="form-control ro-date">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input class="form-control ro-collaborators"
+                                                placeholder="Collaborators (comma-separated)">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="url" class="form-control ro-pdfUrl" placeholder="PDF URL">
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-success add-research-output">+ Add
+                                        Output</button>
+                                </div>
+                            </fieldset>
+
+
+
+                            <!-- ===== SECTION: Research Grants ===== -->
+                            <fieldset class="border p-3">
+                                <legend class="w-auto px-2">Research Grants</legend>
+                                <div id="grantsContainer">
+                                    <div class="row mb-2 grant-entry">
+                                        <div class="col-md-4"><input class="form-control grant-title"
+                                                placeholder="Title"></div>
+                                        <div class="col-md-3"><input type="date" class="form-control grant-date"></div>
+                                        <div class="col-md-2"><input class="form-control grant-tag" placeholder="Tag">
+                                        </div>
+                                        <div class="col-md-3"><input class="form-control grant-desc"
+                                                placeholder="Description"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-success add-grant">+ Add grant</button>
+                                </div>
+                            </fieldset>
+
+                            <!-- ===== SECTION: Professional Activities ===== -->
+                            <fieldset class="border p-3">
+                                <legend class="w-auto px-2">Professional Activities</legend>
+                                <div id="activitiesContainer">
+                                    <div class="row mb-2 activity-entry">
+                                        <div class="col-md-3"><input class="form-control act-type" placeholder="Type">
+                                        </div>
+                                        <div class="col-md-3"><input class="form-control act-title" placeholder="Title">
+                                        </div>
+                                        <div class="col-md-3"><input type="date" class="form-control act-date"></div>
+                                        <div class="col-md-3"><input class="form-control act-desc"
+                                                placeholder="Description"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-success add-activity">+ Add activity</button>
+                                </div>
+                            </fieldset>
+
+                            <!-- ===== SECTION: Teaching Activities ===== -->
+                            <fieldset class="border p-3">
+                                <legend class="w-auto px-2">Teaching Activities</legend>
+                                <div id="teachingContainer">
+                                    <div class="row mb-2 teaching-entry">
+                                        <div class="col-md-2"><input class="form-control teach-tag" placeholder="Tag">
+                                        </div>
+                                        <div class="col-md-3"><input class="form-control teach-title"
+                                                placeholder="Title"></div>
+                                        <div class="col-md-2"><input type="date" class="form-control teach-start"></div>
+                                        <div class="col-md-2"><input type="date" class="form-control teach-end"></div>
+                                        <div class="col-md-3"><input type="url" class="form-control teach-link"
+                                                placeholder="Link"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-success add-teaching">+ Add teaching</button>
+                                </div>
+                            </fieldset>
+
+
+                            <input type="hidden" id="staffId" name="staffId">
+
+                            <!-- ===== SECTION: Actions ===== -->
+                            <div class="col-lg-12 mt-4">
+                                <button type="button" id="createBtn" class="btn btn-submit me-2">Create Staff</button>
+                                <button type="button" id="updateBtn" class="btn btn-warning me-2 btn-submit"
+                                    hidden>Update
+                                    Staff</button>
+                                <button type="reset" id="clearBtn" class="btn btn-secondary btn-cancel me-2"
+                                    hidden>Clear</button>
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </form>
+
+
+
+            <!-- table to contain list of schools -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header pb-0">
+                            <h4 class="card-title mb-0">All Staff</h4>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th>S/N</th>
+                                            <th>Profile Image</th>
+                                            <th>Staff Name</th>
+                                            <th>School</th>
+                                            <th>Department</th>
+                                            <th>Department</th>
+                                            <th>Email</th>
+                                            <th>Actions</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="StaffTableBody">
+                                        <!-- inserted from js -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+
+    <%- include("partials/footer")%>
+
+
+
+
+        <!-- Tom Select JS -->
+        <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
+        <!-- =================  SCRIPT to FIX FORM HTML  ================= -->
+        <script defer>
+            document.addEventListener("DOMContentLoaded", () => {
+
+                /* ---------- helpers ---------- */
+                function addSimple(containerId, inputClass, placeholder) {
+                    const c = document.getElementById(containerId);
+                    const g = document.createElement("div");
+                    g.className = "input-group mb-2";
+                    g.innerHTML = `
+      <input type="text" class="form-control ${inputClass}" placeholder="${placeholder}">
+      <button type="button" class="btn btn-danger remove-btn">−</button>
+    `;
+                    c.appendChild(g);
+                }
+
+                /* ---------- delegated clicks ---------- */
+                document.body.addEventListener("click", e => {
+
+                    /* --- growable simple lists --- */
+                    if (e.target.matches(".add-specialization")) {
+                        addSimple("specializationContainer", "specialization-input", "e.g. Machine Learning");
+                    }
+                    if (e.target.matches(".add-degree")) {
+                        addSimple("degreesContainer", "degree-input", "e.g. BSc (Physics)");
+                    }
+                    if (e.target.matches(".add-interest")) {
+                        addSimple("researchInterestsContainer", "interest-input", "e.g. Quantum Computing");
+                    }
+
+                    /* --- complex rows --- */
+                    if (e.target.matches(".add-grant")) {
+                        const c = document.getElementById("grantsContainer");
+                        const row = document.createElement("div");
+                        row.className = "row mb-2 grant-entry";
+                        row.innerHTML = `
+        <div class="col-md-4"><input class="form-control grant-title" placeholder="Title"></div>
+        <div class="col-md-3"><input type="date" class="form-control grant-date"></div>
+        <div class="col-md-2"><input class="form-control grant-tag" placeholder="Tag"></div>
+        <div class="col-md-3"><input class="form-control grant-desc" placeholder="Description"></div>
+        <div class="col-md-1 mt-2 mt-md-0"><button type="button" class="btn btn-danger btn-sm remove-btn">×</button></div>
+      `;
+                        c.insertBefore(row, e.target);
+                    }
+
+
+                    if (e.target.matches(".add-research-output")) {
+                        const c = document.getElementById("researchOutputsContainer");
+                        const row = document.createElement("div");
+                        row.className = "row mb-2 research-output-entry";
+                        row.innerHTML = `
+      <div class="col-md-4">
+        <input class="form-control ro-title" placeholder="Title">
+      </div>
+      <div class="col-md-2">
+        <input type="date" class="form-control ro-date">
+      </div>
+      <div class="col-md-4">
+        <input class="form-control ro-collaborators" placeholder="Collaborators (comma-separated)">
+      </div>
+      <div class="col-md-2">
+        <input type="url" class="form-control ro-pdfUrl" placeholder="PDF URL">
+      </div>
+      <div class="col-md-1 mt-2 mt-md-0">
+        <button type="button" class="btn btn-danger btn-sm remove-btn">×</button>
+      </div>
+    `;
+                        c.insertBefore(row, e.target); // insert before the "Add Output" button
+                    }
+
+
+                    if (e.target.matches(".add-activity")) {
+                        const c = document.getElementById("activitiesContainer");
+                        const row = document.createElement("div");
+                        row.className = "row mb-2 activity-entry";
+                        row.innerHTML = `
+        <div class="col-md-3"><input class="form-control act-type" placeholder="Type"></div>
+        <div class="col-md-3"><input class="form-control act-title" placeholder="Title"></div>
+        <div class="col-md-3"><input type="date" class="form-control act-date"></div>
+        <div class="col-md-2"><input class="form-control act-desc" placeholder="Description"></div>
+        <div class="col-md-1 mt-2 mt-md-0"><button type="button" class="btn btn-danger btn-sm remove-btn">×</button></div>
+      `;
+                        c.insertBefore(row, e.target);
+                    }
+
+                    if (e.target.matches(".add-teaching")) {
+                        const c = document.getElementById("teachingContainer");
+                        const row = document.createElement("div");
+                        row.className = "row mb-2 teaching-entry";
+                        row.innerHTML = `
+        <div class="col-md-2"><input class="form-control teach-tag" placeholder="Tag"></div>
+        <div class="col-md-3"><input class="form-control teach-title" placeholder="Title"></div>
+        <div class="col-md-2"><input type="date" class="form-control teach-start"></div>
+        <div class="col-md-2"><input type="date" class="form-control teach-end"></div>
+        <div class="col-md-3"><input type="url" class="form-control teach-link" placeholder="Link"></div>
+        <div class="col-md-1 mt-2 mt-md-0"><button type="button" class="btn btn-danger btn-sm remove-btn">×</button></div>
+      `;
+                        c.insertBefore(row, e.target);
+                    }
+
+                    /* --- universal remove --- */
+                    if (e.target.matches(".remove-btn")) {
+                        const wrap = e.target.closest(".input-group, .row");
+                        if (wrap) wrap.remove();
+                    }
+                });
+
+            });
+        </script>
+
+
+        <!-- SCRIPT TO POPULATE THE SCHOOL, DEPARTMENT, AND PROGRAM -->
+
+        <script>
+            (() => {
+                /* ---------- DOM references ---------- */
+                const facultySel = document.getElementById('faculty');
+                const deptSel = document.getElementById('department');
+                const progSel = document.getElementById('program');
+
+                let facultyTom, deptTom, progTom;
+
+                /* ---------- tiny helpers ---------- */
+                const resetTomSelect = (tsInstance, placeholder) => {
+                    tsInstance.clearOptions();
+                    tsInstance.addOption({ value: '', text: placeholder });
+                    tsInstance.setValue('');
+                    tsInstance.refreshOptions(false);
+                };
+
+                const toOptions = (items, labelKey = 'name') =>
+                    items.map(i => ({ value: i._id, text: i[labelKey] || i.name }));
+
+                /* ---------- uniform fetch wrapper ---------- */
+                async function getData(url) {
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+                    const json = await res.json();
+
+                    if (Array.isArray(json.data)) return json.data;
+                    if (Array.isArray(json.programs)) return json.programs;
+                    if (json.program) return [json.program];
+                    if (Array.isArray(json.departments)) return json.departments;
+                    if (Array.isArray(json.schools)) return json.schools;
+                    if (Array.isArray(json)) return json;
+
+                    throw new Error(`Unrecognized response structure from ${url}`);
+                }
+
+                /* ---------- loaders ---------- */
+                async function loadSchools() {
+                    try {
+                        const schools = await getData('/api/schools');
+                        facultyTom.addOptions(toOptions(schools));
+                        facultyTom.refreshOptions(false);
+                    } catch (err) {
+                        console.error('Failed to load schools', err);
+                    }
+                }
+
+                async function loadDepts() {
+
+                    try {
+                        const depts = await getData('/api/departments');
+                        deptTom.addOptions(toOptions(depts));
+                        deptTom.refreshOptions(false);
+                    } catch (err) {
+                        console.error('Failed to load departments', err);
+                    }
+                }
+
+                async function loadPrograms() {
+
+                    try {
+                        const progs = await getData('/api/programs');
+                        progTom.addOptions(toOptions(progs));
+                        progTom.refreshOptions(false);
+                    } catch (err) {
+                        console.error('Failed to load programs', err);
+                    }
+                }
+
+                /* ---------- kick-off ---------- */
+                document.addEventListener('DOMContentLoaded', () => {
+                    // Initialize TomSelect first
+                    facultyTom = new TomSelect(facultySel, {
+
+                        placeholder: 'Select School',
+                        plugins: ['remove_button'],
+                        maxItems: 1,
+                        create: false,
+                        persist: false,
+
+                    });
+
+                    deptTom = new TomSelect(deptSel, {
+
+                        placeholder: 'Select Department',
+                        plugins: ['remove_button'],
+                        maxItems: null,
+                        create: false,
+                        persist: false
+                    });
+
+                    progTom = new TomSelect(progSel, {
+
+                        placeholder: 'Select Program',
+                        plugins: ['remove_button'],
+                        maxItems: null,
+                        create: false,
+                        persist: false
+                    });
+
+                    // Then populate with data
+                    loadSchools();
+                    loadDepts();
+                    loadPrograms();
+                });
+            })();
+        </script>
+
+
+        <!-- SCRIPT TO HANDLE FACIAL RECORGNITION -->
+        <script>
+            const messageEl = document.getElementById('message');
+            const label = document.getElementById('uploadLabel');
+            const preview = document.getElementById('preview');
+            const container = document.getElementById('image-container');
+
+            let proceedWithImage = false;
+
+            async function loadModels() {
+                const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
+                await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+                await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+                await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+            }
+
+            async function detectFace(imageElement) {
+                if (imageElement.src.includes('passport-photo.png')) return;
+
+                preview.style.opacity = '0';
+                messageEl.textContent = 'Detecting faces...';
+                messageEl.style.color = '#357ABD';
+                proceedWithImage = false; // reset before detection
+
+                const oldCanvas = container.querySelector('canvas');
+                if (oldCanvas) container.removeChild(oldCanvas);
+
+                await new Promise(resolve => setTimeout(resolve, 50));
+
+                const canvas = faceapi.createCanvasFromMedia(imageElement);
+                canvas.style.position = 'absolute';
+                canvas.style.top = '0';
+                canvas.style.left = '0';
+                canvas.style.borderRadius = '50%';
+                container.appendChild(canvas);
+
+                const displaySize = { width: preview.width, height: preview.height };
+                faceapi.matchDimensions(canvas, displaySize);
+
+                const detections = await faceapi
+                    .detectAllFaces(preview, new faceapi.TinyFaceDetectorOptions())
+                    .withFaceLandmarks();
+
+                const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                faceapi.draw.drawDetections(canvas, resizedDetections);
+
+                if (resizedDetections.length === 1) {
+                    proceedWithImage = true;
+                    messageEl.style.color = '#28a745';
+                    messageEl.innerHTML = `Face detected <i class="fas fa-check"></i>`;
+                } else if (resizedDetections.length > 1) {
+                    proceedWithImage = false;
+                    messageEl.style.color = 'orange';
+                    messageEl.innerHTML = `Multiple faces detected. Try another image.`;
+                } else {
+                    proceedWithImage = false;
+                    messageEl.style.color = 'red';
+                    messageEl.innerHTML = 'No face detected. Try another image.';
+                }
+
+                preview.style.opacity = '1';
+            }
+
+            async function handleprofileImage(event) {
+                let file = event.target.files[0];
+                if (!file) return;
+
+                const fileError = [];
+
+                if (file.size > 1024 * 250) {
+                    fileError.push('File size must be at most 250KB.');
+                }
+
+                const acceptableFileTypes = ['image/jpg', 'image/png', 'image/jpeg', 'image/webp'];
+                if (!acceptableFileTypes.includes(file.type)) {
+                    fileError.push('Only a .jpg, .jpeg, .png, or .webp image is supported.');
+                }
+
+                if (fileError.length > 0) {
+                    messageEl.style.color = '#dc3545';
+                    messageEl.innerHTML = fileError.join('<br>');
+                    setTimeout(() => { messageEl.innerHTML = ''; }, 5000);
+                    return;
+                }
+
+                // Temporarily show image for detection only
+                const tempUrl = URL.createObjectURL(file);
+                preview.src = tempUrl;
+
+                label.style.pointerEvents = 'none';
+                label.classList.add('disabled');
+
+                preview.onload = async () => {
+                    await detectFace(preview);
+                    URL.revokeObjectURL(tempUrl);
+                    label.style.pointerEvents = 'auto';
+                    label.classList.remove('disabled');
+
+                    // Only keep the image if valid
+                    // Only keep the image if valid
+                    if (!proceedWithImage) {
+                        // preview.src = 'passport-photo.png'; // reset to default
+                        document.getElementById('profileImage').value = ""; // clear file input
+                        messageEl.style.color = '#dc3545';
+
+                    }
+
+                };
+            }
+
+            window.onload = async () => {
+                await loadModels();
+                document.getElementById('profileImage').addEventListener('change', handleprofileImage);
+            };
+        </script>
+
+
+
+
+
+        <!-- SCRIPT TO SUMBIT FORM -->
+        <script>
+            // Utility to get multiple select values as array
+            function getSelectValues(form, name) {
+                const el = form[name];
+                if (!el) return [];
+                if (el.multiple) {
+                    return [...el.selectedOptions].map(opt => opt.value.trim()).filter(Boolean);
+                }
+                const value = el.value?.trim();
+                return value ? [value] : [];
+            }
+
+            // Validate staff form fields
+            function validateStaffForm(form) {
+                const errors = [];
+
+                const fullName = form.fullName?.value.trim() || "";
+                const email = form.email?.value.trim() || "";
+                const phone = form.phone?.value.trim() || "";
+                const faculty = form.faculty?.value.trim() || "";
+                const department = getSelectValues(form, 'department');
+                const program = getSelectValues(form, 'program');
+                const position = form.position?.value.trim() || "";
+                const title = form.title?.value.trim() || "";
+                // const address = form.address?.value.trim() || "";
+                const profileImage = form.profileImage?.files?.[0];
+
+                // Existing validations
+                if (!fullName) errors.push("Full name is required.");
+                if (fullName.length < 3) errors.push("Full name must be at least 3 characters.");
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push("Valid email is required.");
+                if (!phone) errors.push("Phone number is required.");
+                if (!/^(\+234|0)[789][01]\d{8}$/.test(phone)) errors.push("Invalid Nigerian phone number.");
+                if (!faculty) errors.push("Faculty is required.");
+                if (!/^[0-9a-fA-F]{24}$/.test(faculty)) errors.push("Invalid Faculty ID.");
+                if (!Array.isArray(department) || department.length === 0) errors.push("Department must be selected.");
+                if (!Array.isArray(program) || program.length === 0) errors.push("Program must be selected.");
+
+                // other validations
+                if (!title) errors.push("Title is required.");
+                if (!position || position.length < 2) errors.push("Position is required and must be at least 2 characters.");
+                // if (!address || address.length < 5) errors.push("Address is required and must be at least 5 characters.");
+
+                if (profileImage) {
+                    if (!/^image\/(jpeg|png|webp|jpg)$/.test(profileImage.type) || profileImage.size > 1024 * 250) {
+                        errors.push("Profile image must be a valid image file (jpeg, png, webp) and not more than 250KB in size.");
+                    }
+                }
+
+
+
+                return errors;
+            }
+
+
+            // Build staff object from form inputs
+            function buildStaffObject(form) {
+                return {
+                    faculty: form.faculty?.value.trim() || "",
+                    department: getSelectValues(form, 'department'),
+                    program: getSelectValues(form, 'program'),
+                    profileImage: null,
+                    fullName: form.fullName?.value.trim() || "",
+                    title: form.title?.value.trim() || "",
+                    position: form.position?.value.trim() || "",
+                    specialization: [...form.querySelectorAll('.specialization-input')].map(i => i.value.trim()).filter(Boolean),
+                    phone: form.phone?.value.trim() || "",
+                    email: form.email?.value.trim() || "",
+                    // address: form.address?.value.trim() || "",
+                    affiliation: form.affiliation?.value.trim() || "",
+                    externalLinks: {
+                        googleScholar: form.googleScholar?.value.trim() || "",
+                        researchGate: form.researchGate?.value.trim() || "",
+                        collaborationNetwork: form.collaborationNetwork?.value.trim() || ""
+                    },
+                    about: {
+                        bio: form.bio?.value.trim() || "",
+                        degrees: [...form.querySelectorAll('.degree-input')].map(i => i.value.trim()).filter(Boolean)
+                    },
+
+
+
+
+                    researchOutputs: [...form.querySelectorAll('.research-output-entry')].map(entry => {
+                        const inputs = entry.querySelectorAll('input');
+                        return {
+                            title: inputs[0]?.value.trim() || "",
+                            date: inputs[1]?.value || "",
+                            collaborators: (inputs[2]?.value || "").split(',').map(s => s.trim()).filter(Boolean),
+                            pdfUrl: inputs[3]?.value.trim() || ""
+                        };
+                    }).filter(ro => ro.title || ro.date || ro.collaborators.length > 0 || ro.pdfUrl),
+
+
+
+
+                    research: {
+                        interests: [...form.querySelectorAll('.interest-input')].map(i => i.value.trim()).filter(Boolean),
+                        grants: [...form.querySelectorAll('.grant-entry')].map(entry => {
+                            const inputs = entry.querySelectorAll('input');
+                            return {
+                                title: inputs[0]?.value.trim() || "",
+                                date: inputs[1]?.value || "",
+                                tag: inputs[2]?.value.trim() || "",
+                                description: inputs[3]?.value.trim() || ""
+                            };
+                        }).filter(g => g.title || g.date || g.tag || g.description)
+                    },
+                    professionalActivities: [...form.querySelectorAll('.activity-entry')].map(entry => {
+                        const inputs = entry.querySelectorAll('input');
+                        return {
+                            type: inputs[0]?.value.trim() || "",
+                            title: inputs[1]?.value.trim() || "",
+                            date: inputs[2]?.value || "",
+                            description: inputs[3]?.value.trim() || ""
+                        };
+                    }).filter(a => a.type || a.title || a.date || a.description),
+                    teachingActivities: [...form.querySelectorAll('.teaching-entry')].map(entry => {
+                        const inputs = entry.querySelectorAll('input');
+                        return {
+                            tag: inputs[0]?.value.trim() || "",
+                            title: inputs[1]?.value.trim() || "",
+                            startDate: inputs[2]?.value || "",
+                            endDate: inputs[3]?.value || "",
+                            link: inputs[4]?.value.trim() || ""
+                        };
+                    }).filter(t => t.tag || t.title || t.startDate || t.endDate || t.link)
+                };
+            }
+
+            // Build FormData including staff JSON and optional image
+            function buildFormData(staff, form) {
+                const fd = new FormData();
+                fd.append('staff', JSON.stringify(staff));
+                const image = form.profileImage?.files?.[0];
+                if (image) {
+                    fd.append('profileImage', image);
+                }
+                return fd;
+            }
+
+            // Submit the form
+            async function submitStaffForm(form) {
+                const errors = validateStaffForm(form);
+                if (errors.length > 0) {
+                    return Swal.fire("Validation Error", errors.join("<br>"), "warning");
+                }
+
+                const staff = buildStaffObject(form);
+
+                // console.log("Built staff objec", staff)
+                const formData = buildFormData(staff, form);
+
+                // console.log("Form Data", formData)
+
+                Swal.fire({
+                    title: 'Saving…',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                try {
+                    // console.log("Submitting staff data...");
+                    // for (const [key, value] of formData.entries()) {
+                    //     console.log(`${key}:`, value);
+                    // }
+                    const res = await fetch('/api/staff', {
+                        method: 'POST',
+                        headers: { Authorization: `Bearer ${token}` },
+                        body: formData
+                    });
+
+                    if (!res.ok) {
+                        const errMsg = await res.json();
+                        throw new Error(errMsg.message);
+                    }
+
+                    Swal.fire('Success', 'Staff record created!', 'success');
+                    form.reset();
+                    document.querySelector('#staffId').value = '';
+
+                    // Properly reset all TomSelect fields
+                    document.querySelectorAll('select').forEach(select => {
+                        if (select.tomselect) {
+                            select.tomselect.clear();        // Clear selected values
+                            select.tomselect.clearOptions(); // Optional: clear options if needed
+                            select.tomselect.setValue('');   // Ensure it's blank
+                        }
+                    });
+
+
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Error', err.message || 'Server error. Check console.', 'error');
+                }
+            }
+
+            // Entry point when button is clicked
+            document.addEventListener('DOMContentLoaded', () => {
+                const createBtn = document.getElementById('createBtn');
+                const form = document.getElementById('staffForm');
+
+                if (!createBtn || !form) {
+                    console.warn("Required elements not found: #createBtn or #staffForm");
+                    return;
+                }
+
+                createBtn.addEventListener('click', () => submitStaffForm(form));
+            });
+        </script>
+
+
+
+
+
+
+
+        <script>
+            async function loadStaffList() {
+                try {
+                    const res = await fetch('/api/staff');
+                    const data = await res.json();
+
+                    if (!data.success) throw new Error(data.message || "Failed to load staff");
+
+                    // Destroy existing datatable
+                    if ($.fn.DataTable.isDataTable('.datanew')) {
+                        $('.datanew').DataTable().destroy();
+                    }
+
+                    const tbody = document.getElementById('StaffTableBody');
+                    tbody.innerHTML = ''; // Clear existing rows
+
+                    // Escape JSON safely for HTML
+                    const escapeHtml = (unsafe) =>
+                        unsafe
+                            .replace(/&/g, "&amp;")
+                            .replace(/</g, "&lt;")
+                            .replace(/>/g, "&gt;")
+                            .replace(/"/g, "&quot;")
+                            .replace(/'/g, "&#039;");
+
+                    data.staff.forEach((staff, index) => {
+                        const tr = document.createElement('tr');
+
+                        const departmentNames = Array.isArray(staff.department)
+                            ? staff.department.map(d => d.name).join(', ')
+                            : '';
+                        const programNames = Array.isArray(staff.program)
+                            ? staff.program.map(p => p.name).join(', ')
+                            : '';
+
+                        const safeJson = escapeHtml(JSON.stringify(staff));
+
+                        tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>
+                        <div style="width: 40px; height: 40px; overflow: hidden; border-radius: 50%;">
+                            <img src="${staff.profileImage?.url || '/passport-photo.png'}" 
+                                 alt="Profile" 
+                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                        </div>
+                    </td>
+                    <td>${staff.fullName}</td>
+                    <td>${staff.faculty?.name || '-'}</td>
+                    <td>${departmentNames}</td>
+                    <td>${programNames}</td>
+                    <td>${staff.email}</td>
+                    <td>
+                        <span class="me-2 text-primary action-btns edit-btn" data-staff='${safeJson}'>
+                            <i class="fas fa-pen me-1"></i>Edit
+                        </span>
+                        <span class="text-danger action-btns delete-btn" data-id="${staff._id}">
+                            <i class="fas fa-trash me-1"></i>Delete
+                        </span>
+                    </td>
+                `;
+
+                        tbody.appendChild(tr);
+                    });
+
+                    $('.datanew').DataTable();
+
+                    attachDeleteHandlers();
+
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire("Error", err.message || "Could not fetch staff list", "error");
+                }
+            }
+
+            function attachDeleteHandlers() {
+                const deleteButtons = document.querySelectorAll('.delete-btn');
+                deleteButtons.forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const staffId = btn.dataset.id;
+                        const result = await Swal.fire({
+                            title: 'Are you sure?',
+                            text: "This action cannot be undone!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes, delete it!',
+                        });
+
+                        if (result.isConfirmed) {
+                            try {
+                                const res = await fetch(`/api/staff/${staffId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        "Authorization": `Bearer ${token}`
+                                    }
+                                });
+
+                                const data = await res.json();
+                                if (!data.success) throw new Error(data.message);
+
+                                Swal.fire('Deleted!', 'Staff record has been deleted.', 'success');
+                                loadStaffList(); // Refresh table
+                            } catch (err) {
+                                console.error(err);
+                                Swal.fire('Error', err.message || 'Failed to delete staff', 'error');
+                            }
+                        }
+                    });
+                });
+            }
+
+            // Load staff list on DOM ready
+            document.addEventListener('DOMContentLoaded', loadStaffList);
+        </script>
+
+
+
+
+        <!-- EDITING, UPDATING AND DELETING -->
+        <script>
+            async function populateStaffForm(staff) {
+                // === Basic Info ===
+                document.getElementById('fullName').value = staff.fullName || '';
+                document.getElementById('title').value = staff.title || '';
+                document.getElementById('position').value = staff.position || '';
+                document.getElementById('phone').value = staff.phone || '';
+                document.getElementById('email').value = staff.email || '';
+                // document.getElementById('address').value = staff.address || '';
+                document.getElementById('affiliation').value = staff.affiliation || '';
+                document.getElementById('googleScholar').value = staff.externalLinks.googleScholar || '';
+                document.getElementById('researchGate').value = staff.externalLinks
+                    .researchGate || '';
+                document.getElementById('collaborationNetwork').value = staff.externalLinks
+                    .collaborationNetwork || '';
+                document.getElementById('bio').value = staff.about.bio || '';
+
+                // === Image Preview ===
+                if (staff.profileImage?.url) {
+                    document.getElementById('preview').src = staff.profileImage.url;
+
+                }
+
+                // === TomSelect (Faculty, Department, Program) ===
+                setTomSelectValue('faculty', staff.faculty);
+                setTomSelectValue('department', staff.department, true);
+                setTomSelectValue('program', staff.program, true);
+
+                // === Populate Arrays ===
+                populateList('specializationContainer', staff.specialization, 'specialization-input', 'add-specialization');
+                populateList('degreesContainer', staff.about?.degrees, 'degree-input', 'add-degree');
+                populateList('researchInterestsContainer', staff.researchInterests, 'interest-input', 'add-interest');
+
+                populateObjects('researchOutputsContainer', staff.researchOutputs, addResearchOutputEntry);
+                populateObjects('grantsContainer', staff.research.grants, addGrantEntry);
+                populateObjects('activitiesContainer', staff.professionalActivities, addActivityEntry);
+                populateObjects('teachingContainer', staff.teachingActivities, addTeachingEntry);
+
+                // === Toggle Buttons ===
+                document.getElementById('createBtn').hidden = true;
+                document.getElementById('updateBtn').hidden = false;
+            }
+
+            // --- Helper: Set TomSelect Values ---
+            function setTomSelectValue(id, value, isMultiple = false) {
+                const select = document.getElementById(id);
+                const tom = select.tomselect;
+                if (!tom) return; // safety
+
+                if (!value) {
+                    tom.clear();
+                    return;
+                }
+
+                if (isMultiple) {
+                    // value is expected as an array of objects or ids
+                    // map to ids if objects
+                    const ids = Array.isArray(value)
+                        ? value.map(v => (typeof v === 'object' && v !== null ? v._id || '' : v))
+                        : [];
+                    tom.setValue(ids);
+                } else {
+                    // single select - get id if object
+                    const val = (typeof value === 'object' && value !== null) ? value._id || '' : value;
+                    tom.setValue(val);
+                }
+            }
+
+
+
+
+            // --- Helper: Populate simple list inputs (specializations, degrees, interests) ---
+            function populateList(containerId, items = [], inputClass, addBtnClass) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                items.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.classList.add('input-group', 'mb-2');
+                    div.innerHTML = `
+                <input class="form-control ${inputClass}" value="${item || ''}">
+                <button type="button" class="btn btn-${index === 0 ? 'success' : 'danger'} ${index === 0 ? addBtnClass : 'remove-btn'}">${index === 0 ? '+' : '-'}</button>
+            `;
+                    container.appendChild(div);
+                });
+            }
+
+            // --- Helper: Populate object-based entries (outputs, grants, etc.) ---
+            function populateObjects(containerId, items = [], addFn) {
+                const container = document.getElementById(containerId);
+                container.querySelectorAll('.row').forEach(row => row.remove()); // remove existing entries
+                items.forEach(item => addFn(container, item));
+            }
+
+            // --- Entry creation helpers ---
+            function addResearchOutputEntry(container, data = {}) {
+                const row = document.createElement('div');
+                row.classList.add('row', 'mb-2', 'research-output-entry');
+                row.innerHTML = `
+            <div class="col-md-4"><input class="form-control ro-title" value="${data.title || ''}" placeholder="Title"></div>
+            <div class="col-md-2"><input type="date" class="form-control ro-date" value="${data.date?.substring(0, 10) || ''}"></div>
+            <div class="col-md-4"><input class="form-control ro-collaborators" value="${(data.collaborators || []).join(', ')}" placeholder="Collaborators"></div>
+            <div class="col-md-2"><input type="url" class="form-control ro-pdfUrl" value="${data.pdfUrl || ''}" placeholder="PDF URL"></div>
+        `;
+                container.insertBefore(row, container.querySelector('.add-research-output'));
+            }
+
+            function addGrantEntry(container, data = {}) {
+                const row = document.createElement('div');
+                row.classList.add('row', 'mb-2', 'grant-entry');
+                row.innerHTML = `
+            <div class="col-md-4"><input class="form-control grant-title" value="${data.title || ''}" placeholder="Title"></div>
+            <div class="col-md-3"><input type="date" class="form-control grant-date" value="${data.date?.substring(0, 10) || ''}"></div>
+            <div class="col-md-2"><input class="form-control grant-tag" value="${data.tag || ''}" placeholder="Tag"></div>
+            <div class="col-md-3"><input class="form-control grant-desc" value="${data.description || ''}" placeholder="Description"></div>
+        `;
+                container.insertBefore(row, container.querySelector('.add-grant'));
+            }
+
+            function addActivityEntry(container, data = {}) {
+                const row = document.createElement('div');
+                row.classList.add('row', 'mb-2', 'activity-entry');
+                row.innerHTML = `
+            <div class="col-md-3"><input class="form-control act-type" value="${data.type || ''}" placeholder="Type"></div>
+            <div class="col-md-3"><input class="form-control act-title" value="${data.title || ''}" placeholder="Title"></div>
+            <div class="col-md-3"><input type="date" class="form-control act-date" value="${data.date?.substring(0, 10) || ''}"></div>
+            <div class="col-md-3"><input class="form-control act-desc" value="${data.description || ''}" placeholder="Description"></div>
+        `;
+                container.insertBefore(row, container.querySelector('.add-activity'));
+            }
+
+            function addTeachingEntry(container, data = {}) {
+                const row = document.createElement('div');
+                row.classList.add('row', 'mb-2', 'teaching-entry');
+
+                row.innerHTML = `
+            <div class="col-md-2"><input class="form-control teach-tag" value="${data.tag || ''}" placeholder="Tag"></div>
+            <div class="col-md-3"><input class="form-control teach-title" value="${data.title || ''}" placeholder="Title"></div>
+            <div class="col-md-2"><input type="date" class="form-control teach-start" value="${data.startDate?.substring(0, 10) || ''}"></div>
+            <div class="col-md-2"><input type="date" class="form-control teach-end" value="${data.endDate?.substring(0, 10) || ''}"></div>
+            <div class="col-md-3"><input type="url" class="form-control teach-link" value="${data.link || ''}" placeholder="Link"></div>
+        `;
+                container.insertBefore(row, container.querySelector('.add-teaching'));
+            }
+
+
+
+
+            document.addEventListener('click', async function (e) {
+                if (e.target.classList.contains('edit-btn')) {
+                    const staffJson = e.target.dataset.staff;
+
+                    if (staffJson) {
+                        try {
+                            // SAFELY decode HTML entities
+                            const decodeHtml = html => {
+                                const txt = document.createElement("textarea");
+                                txt.innerHTML = html;
+                                return txt.value;
+                            };
+
+                            const decodedJson = decodeHtml(staffJson);
+                            const staff = JSON.parse(decodedJson);
+
+                            await populateStaffForm(staff);
+
+                            document.querySelector('#staffId').value = staff._id;
+                            document.getElementById('clearBtn').hidden = false;
+                            document.getElementById("toTop").scrollIntoView({ behavior: "smooth" });
+                        } catch (err) {
+                            console.error('Failed to parse staff JSON:', err);
+                        }
+                    }
+                }
+            });
+
+
+
+            document.getElementById('clearBtn').addEventListener('click', () => {
+                // Reset the form (native)
+                document.getElementById('staffForm').reset();
+
+                // Reset TomSelect selects
+                ['faculty', 'department', 'program'].forEach(id => {
+                    const select = document.getElementById(id);
+                    if (select.tomselect) select.tomselect.clear();
+                });
+
+                // Clear image preview
+                const preview = document.getElementById('preview');
+                if (preview) preview.src = '/passport-photo.png';
+
+                // Clear dynamic list containers (simple string lists)
+                ['specializationContainer', 'degreesContainer', 'researchInterestsContainer'].forEach(id => {
+                    const container = document.getElementById(id);
+                    if (container) container.innerHTML = '';
+                    // Optionally add one empty input group so user can start typing
+                    if (container) {
+                        const div = document.createElement('div');
+                        div.classList.add('input-group', 'mb-2');
+                        div.innerHTML = `
+                <input class="form-control" value="">
+                <button type="button" class="btn btn-success add-btn">+</button>
+            `;
+                        container.appendChild(div);
+                    }
+                });
+
+                // Clear dynamic object containers (complex entries)
+                ['researchOutputsContainer', 'grantsContainer', 'activitiesContainer', 'teachingContainer'].forEach(id => {
+                    const container = document.getElementById(id);
+                    if (container) {
+                        // Remove all existing .row entries except the "add" button container
+                        container.querySelectorAll('.row').forEach(row => row.remove());
+                    }
+                });
+
+                // Show Create button, hide Update and Clear buttons
+                document.getElementById('createBtn').hidden = false;
+                document.getElementById('updateBtn').hidden = true;
+                document.getElementById('clearBtn').hidden = true;
+
+                document.querySelector(".table-responsive").scrollIntoView({ behavior: "smooth" });
+            });
+
+
+
+
+            async function updateStaffForm(form) {
+                const errors = validateStaffForm(form);
+                if (errors.length > 0) {
+                    return Swal.fire("Validation Error", errors.join("<br>"), "warning");
+                }
+
+                const staff = buildStaffObject(form);
+
+                // console.log("Built staff objec", staff)
+                const formData = buildFormData(staff, form);
+
+                // console.log("Form Data", formData)
+
+                Swal.fire({
+                    title: 'Updating…',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                try {
+                    // console.log("Submitting staff data...");
+                    // for (const [key, value] of formData.entries()) {
+                    //     console.log(`${key}:`, value);
+                    // }
+
+                    const staffId = document.querySelector('#staffId').value;
+                    const res = await fetch(`/api/staff/${staffId}`, {
+                        method: 'PUT',
+                        headers: { Authorization: `Bearer ${token}` },
+                        body: formData
+                    });
+
+                    if (!res.ok) {
+                        const errMsg = await res.json();
+                        throw new Error(errMsg.message);
+                    }
+
+                    Swal.fire('Success', 'Staff record updated!', 'success');
+                    form.reset();
+                    document.querySelector('#staffId').value = '';
+
+                    // Properly reset all TomSelect fields
+                    document.querySelectorAll('select').forEach(select => {
+                        if (select.tomselect) {
+                            select.tomselect.clear();        // Clear selected values
+                            select.tomselect.clearOptions(); // Optional: clear options if needed
+                            select.tomselect.setValue('');   // Ensure it's blank
+                        }
+
+
+                        location.reload();
+                    });
+
+
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Error', err.message || 'Server error. Check console.', 'error');
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const updateBtn = document.getElementById('updateBtn');
+                const form = document.getElementById('staffForm');
+
+                if (!updateBtn || !form) {
+                    console.warn("Required elements not found: #updateBtn or #staffForm");
+                    return;
+                }
+
+                updateBtn.addEventListener('click', () => updateStaffForm(form));
+            });
+
+
+        </script>
+
+
+
+
+
+
+        </body>
+
+        </html>

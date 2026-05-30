@@ -1,0 +1,467 @@
+<%- include("partials/header-sidebar") %>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+/>
+
+<style>
+  .ts-control {
+    min-height: 38px;
+    border-radius: 4px;
+  }
+
+  .image-uploads {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    width: 220px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: #fafafa;
+    overflow: hidden;
+  }
+
+  .image-uploads img.preview-thumb {
+    width: auto;
+    height: 100px;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 6px;
+    object-fit: contain;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .images-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 30px;
+  }
+
+  .gallery-item {
+    width: 180px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .gallery-caption {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 14px;
+    padding: 5px;
+    text-align: center;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    margin: auto;
+  }
+
+  .modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 80vh;
+    border-radius: 10px;
+  }
+
+  .modal-caption {
+    color: #fff;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    color: #fff;
+    font-size: 36px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1100;
+  }
+
+  .delete-icon {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    cursor: pointer;
+    z-index: 2;
+    font-size: 18px;
+    background: rgba(255, 0, 0, 0.2);
+    padding: 4px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+  }
+
+  .delete-icon:hover {
+    background: rgba(255, 0, 0, 0.1);
+  }
+</style>
+<link
+  href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css"
+  rel="stylesheet"
+/>
+
+<div class="page-wrapper" id="toTop">
+  <div class="content">
+    <div class="page-header">
+      <div class="page-title">
+        <h4>Manage Hero Images</h4>
+        <h6>Add/Delete Hero Images</h6>
+      </div>
+    </div>
+
+    <form id="imageUploadForm" enctype="multipart/form-data">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label for="caption">Image Caption</label>
+                <input
+                  type="text"
+                  id="caption"
+                  name="caption"
+                  class="form-control"
+                  placeholder="Enter Image Caption"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label for="myImage">Upload Image</label>
+                <div class="image-upload">
+                  <input
+                    type="file"
+                    name="image"
+                    id="myImage"
+                    accept="image/*"
+                    required
+                  />
+                  <div class="image-uploads">
+                    <img
+                      src="/assets/img/icons/upload.svg"
+                      alt="upload icon"
+                      class="upload-icon"
+                    />
+                    <h4>Drag and drop image here</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-12 mt-5">
+              <button type="submit" class="btn btn-submit me-2">
+                Upload Image
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="col-lg-12 card">
+      <div class="card-body">
+        <h4 class="card-title">Hero Images</h4>
+        <div class="images-container" id="galleryContainer">
+          <!-- Gallery items will be dynamically inserted here -->
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="pagination"
+      class="mt-4 d-flex justify-content-center gap-2 flex-wrap"
+    ></div>
+
+    <!-- Modal -->
+    <div id="imageModal" class="modal">
+      <span class="close-modal" id="closeModalBtn">&times;</span>
+      <img class="modal-content" id="modalImg" />
+      <div class="modal-caption" id="modalCaption"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script>
+      // Close modal when the '×' button is clicked
+      document
+        .getElementById("closeModalBtn")
+        .addEventListener("click", function () {
+          document.getElementById("imageModal").style.display = "none";
+        });
+
+      // Also close modal when the backdrop is clicked
+      document
+        .getElementById("imageModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            this.style.display = "none";
+          }
+        });
+    </script>
+
+    <script>
+      const imageInput = document.getElementById("myImage");
+      const previewContainer = document.querySelector(".image-uploads");
+      const galleryContainer = document.getElementById("galleryContainer");
+      const paginationContainer = document.getElementById("pagination");
+
+      let currentPage = 1;
+      const imagesPerPage = 18; // Adjust per row/display size
+
+      imageInput.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+          previewContainer.innerHTML = "";
+          const img = document.createElement("img");
+          img.src = URL.createObjectURL(file);
+          img.classList.add("preview-thumb");
+          previewContainer.appendChild(img);
+          img.onload = () => URL.revokeObjectURL(img.src);
+        }
+      });
+
+      document
+        .getElementById("imageUploadForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const formData = new FormData();
+          formData.append("image", imageInput.files[0]);
+          formData.append("altText", document.getElementById("caption").value);
+
+          try {
+            const res = await fetch("/api/hero-image", {
+              method: "POST",
+              headers: { Authorization: `Bearer ${token}` },
+              body: formData,
+            });
+
+            const data = await res.json();
+            if (data.success) {
+              swal.fire(
+                "Success",
+                data.message || "Image uploaded successfully.",
+                "success",
+              );
+              loadGallery(currentPage);
+              this.reset();
+              previewContainer.innerHTML =
+                '<img src="/assets/img/icons/upload.svg" class="upload-icon" /><h4>Drag and drop image here</h4>';
+            } else {
+              swal.fire("Error", data.message, "error");
+            }
+          } catch (err) {
+            console.error(err);
+            swal.fire("Error", "Upload failed.", "error");
+          }
+        });
+
+      //page and limit for pagination
+      async function loadGallery(page = 1) {
+        try {
+          const res = await fetch(
+            "/api/hero-images?page=" + page + "&limit=" + imagesPerPage,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
+
+          const result = await res.json();
+
+          if (!result.success || !Array.isArray(result.images)) {
+            galleryContainer.innerHTML = "<p>No images available.</p>";
+            return;
+          }
+
+          galleryContainer.innerHTML = "";
+
+          result.images.forEach((img) => {
+            const div = document.createElement("div");
+            div.className = "gallery-item";
+            div.style.position = "relative";
+
+            div.innerHTML = `
+        <span class="delete-icon" data-id="${img._id}">
+          <i class="bi bi-trash-fill text-danger"></i>
+        </span>
+        <img src="${img.url}" alt="${img.altText}">
+        <div class="gallery-caption">${img.altText}</div>
+      `;
+
+            galleryContainer.appendChild(div);
+
+            const deleteBtn = div.querySelector(".delete-icon");
+
+            deleteBtn.addEventListener("click", async (e) => {
+              e.stopPropagation();
+
+              const imageId = deleteBtn.getAttribute("data-id");
+
+              const confirm = await Swal.fire({
+                title: "Are you sure?",
+                text: "This image will be deleted.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete it!",
+              });
+
+              if (confirm.isConfirmed) {
+                try {
+                  const res = await fetch(`/api/hero-image/${imageId}`, {
+                    method: "DELETE",
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  });
+
+                  const data = await res.json();
+
+                  if (data.success) {
+                    await Swal.fire(
+                      "Deleted!",
+                      "Image has been deleted.",
+                      "success",
+                    );
+
+                    loadGallery(currentPage);
+                  } else {
+                    Swal.fire(
+                      "Error",
+                      data.message || "Failed to delete image.",
+                      "error",
+                    );
+                  }
+                } catch (err) {
+                  console.error("Delete error:", err);
+                  Swal.fire("Error", "Error deleting image.", "error");
+                }
+              }
+            });
+
+            div.addEventListener("click", () => {
+              document.getElementById("modalImg").src = img.url;
+              document.getElementById("modalCaption").textContent = img.altText;
+              document.getElementById("imageModal").style.display = "block";
+            });
+          });
+
+          renderPagination(result.totalPages, page);
+        } catch (err) {
+          console.error("Failed to load gallery:", err);
+          galleryContainer.innerHTML = "<p>Error loading images.</p>";
+        }
+      }
+
+      // function renderPagination(totalImages, currentPage) {
+      //     const totalPages = Math.ceil(totalImages / imagesPerPage);
+      //     paginationContainer.innerHTML = '';
+
+      //     for (let i = 1; i <= totalPages; i++) {
+      //         const btn = document.createElement('button');
+      //         btn.textContent = i;
+      //         btn.className = `btn ${i === currentPage ? 'btn-primary' : 'btn-light'} btn-sm`;
+      //         btn.addEventListener('click', () => {
+      //             loadGallery(i);
+      //         });
+      //         paginationContainer.appendChild(btn);
+      //     }
+      // }
+
+      // Smart pagination
+
+      function renderPagination(totalPages, currentPage) {
+        paginationContainer.innerHTML = "";
+
+        const delta = 2;
+        const range = [];
+        const rangeWithDots = [];
+        let l;
+
+        for (let i = 1; i <= totalPages; i++) {
+          if (
+            i === 1 ||
+            i === totalPages ||
+            (i >= currentPage - delta && i <= currentPage + delta)
+          ) {
+            range.push(i);
+          }
+        }
+
+        for (let i of range) {
+          if (l) {
+            if (i - l === 2) {
+              rangeWithDots.push(l + 1);
+            } else if (i - l > 2) {
+              rangeWithDots.push("...");
+            }
+          }
+
+          rangeWithDots.push(i);
+          l = i;
+        }
+
+        for (let i of rangeWithDots) {
+          const btn = document.createElement("button");
+          btn.className = "btn btn-sm";
+
+          if (i === "...") {
+            btn.textContent = "...";
+            btn.disabled = true;
+            btn.classList.add("btn-light");
+          } else {
+            btn.textContent = i;
+            btn.classList.add(i === currentPage ? "btn-primary" : "btn-light");
+
+            btn.addEventListener("click", () => {
+              loadGallery(i);
+            });
+          }
+
+          paginationContainer.appendChild(btn);
+        }
+      }
+
+      loadGallery();
+    </script>
+
+    <%- include("partials/footer") %>
+  </div>
+</div>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Event Management</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        input,
+        textarea,
+        button {
+            display: block;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 100%;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .event {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Admin - Event Management</h1>
+
+    <!-- Add Event -->
+    <section>
+        <h2>Add Event</h2>
+        <label>Title</label><input id="add-title" />
+        <label>Date</label><input id="add-date" type="date" />
+        <label>Time</label><input id="add-time" />
+        <label>Location</label><input id="add-location" />
+        <label>Description</label><textarea id="add-description"></textarea>
+        <button onclick="addEvent()">Add Event</button>
+    </section>
+
+    <!-- Update Event -->
+    <section>
+        <h2>Update Event</h2>
+        <label>Event ID</label><input id="update-id" />
+        <label>Title</label><input id="update-title" />
+        <label>Date</label><input id="update-date" type="date" />
+        <label>Time</label><input id="update-time" />
+        <label>Location</label><input id="update-location" />
+        <label>Description</label><textarea id="update-description"></textarea>
+        <button onclick="updateEvent()">Update Event</button>
+    </section>
+
+    <!-- Delete Event -->
+    <section>
+        <h2>Delete Event</h2>
+        <label>Event ID</label><input id="delete-id" />
+        <button onclick="deleteEvent()">Delete Event</button>
+    </section>
+
+    <!-- Get All Events -->
+    <section>
+        <h2>All Events</h2>
+        <button onclick="fetchEvents()">Fetch All Events</button>
+        <div id="event-list"></div>
+    </section>
+
+    <!-- Get Event By ID -->
+    <section>
+        <h2>Get Event by ID</h2>
+        <label>Event ID</label><input id="fetch-id" />
+        <button onclick="fetchEventById()">Fetch Event</button>
+        <pre id="single-event"></pre>
+    </section>
+
+    <script>
+        const apiUrl = "/api/events";
+
+        async function addEvent() {
+            const event = {
+                title: document.getElementById("add-title").value,
+                date: document.getElementById("add-date").value,
+                time: document.getElementById("add-time").value,
+                location: document.getElementById("add-location").value,
+                description: document.getElementById("add-description").value,
+            };
+
+            const res = await fetch(apiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(event)
+            });
+
+            alert((await res.json()).message);
+        }
+
+        async function updateEvent() {
+            const id = document.getElementById("update-id").value;
+            const event = {
+                title: document.getElementById("update-title").value,
+                date: document.getElementById("update-date").value,
+                time: document.getElementById("update-time").value,
+                location: document.getElementById("update-location").value,
+                description: document.getElementById("update-description").value,
+            };
+
+            const res = await fetch(`${apiUrl}/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(event)
+            });
+
+            alert((await res.json()).message);
+        }
+
+        async function deleteEvent() {
+            const id = document.getElementById("delete-id").value;
+
+            const res = await fetch(`${apiUrl}/${id}`, {
+                method: "DELETE"
+            });
+
+            alert((await res.json()).message);
+        }
+
+        async function fetchEvents() {
+            const res = await fetch(apiUrl);
+            const events = await res.json();
+            const list = document.getElementById("event-list");
+            list.innerHTML = "";
+
+            events.forEach(ev => {
+                list.innerHTML += `
+          <div class="event">
+            <strong>${ev.title}</strong><br/>
+            ${ev.date} at ${ev.time}<br/>
+            ${ev.location}<br/>
+            ${ev.description}<br/>
+            <small>ID: ${ev._id}</small>
+          </div>
+        `;
+            });
+        }
+
+        async function fetchEventById() {
+            const id = document.getElementById("fetch-id").value;
+            const res = await fetch(`${apiUrl}?id=${id}`);
+            const event = await res.json();
+            document.getElementById("single-event").innerText = JSON.stringify(event, null, 2);
+        }
+    </script>
+</body>
+
+</html>

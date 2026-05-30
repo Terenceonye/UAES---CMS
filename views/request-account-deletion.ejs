@@ -1,0 +1,151 @@
+<%- include("websitepartials/header") %>
+
+    <main class="main">
+
+        <!-- Page Title -->
+        <div class="page-title dark-background" style="background-image: url(website-assets/img/gallery/privacy.jpg);">
+            <div class="container position-relative">
+                <h1>Account Deletion</h1>
+                <p>Request to Delete Your Account</p>
+                <nav class="breadcrumbs">
+                    <ol>
+                        <li><a href="/">Home</a></li>
+                        <li class="current">Account Deletion</li>
+                    </ol>
+                </nav>
+            </div>
+        </div><!-- End Page Title -->
+
+        <section id="account-deletion" class="section">
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <h3 class="mb-4">Submit a Deletion Request</h3>
+                        <p>If you wish to permanently delete your account and associated data, please fill out the form
+                            below. <br> Your request will be reviewed and processed in accordance with our data policy.
+                        </p>
+
+                        <!-- Deletion Request Form -->
+                        <form id="deletionForm" class="mt-4">
+                            <div class="form-group mb-3">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" name="fullName" id="fullName" class="form-control">
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="email">Registered Email</label>
+                                <input type="text" name="email" id="email" class="form-control">
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="reason">Reason for Deletion (optional)</label>
+                                <textarea name="reason" id="reason" rows="4" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="confirm">
+                                <label class="form-check-label" for="confirm">
+                                    I understand this action is permanent and cannot be undone.
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-danger" id="submitBtn">
+                                <span class="spinner-border spinner-border-sm d-none" role="status"
+                                    aria-hidden="true"></span>
+                                <span class="btn-text">Submit Deletion Request</span>
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <%- include("websitepartials/footer") %>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const form = document.getElementById('deletionForm');
+                const submitBtn = document.getElementById('submitBtn');
+                const spinner = submitBtn.querySelector('.spinner-border');
+                const btnText = submitBtn.querySelector('.btn-text');
+
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const fullName = document.getElementById('fullName').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const reason = document.getElementById('reason').value.trim();
+                    const confirm = document.getElementById('confirm').checked;
+
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                    // Basic validation
+                    if (!fullName || !email) {
+                        return Swal.fire({
+                            icon: 'warning',
+                            title: 'Missing Fields',
+                            text: 'Full name and Registered Email are required.'
+                        });
+                    }
+
+                    if (!emailRegex.test(email)) {
+                        return Swal.fire({
+                            icon: 'warning',
+                            title: 'Invalid Email',
+                            text: 'Please enter a valid email address.'
+                        });
+                    }
+
+                    if (!confirm) {
+                        return Swal.fire({
+                            icon: 'warning',
+                            title: 'Confirmation Required',
+                            text: 'You must confirm that you understand this action is permanent.'
+                        });
+                    }
+
+                    // Disable button & show spinner
+                    submitBtn.disabled = true;
+                    spinner.classList.remove('d-none');
+                    btnText.textContent = 'Submitting...';
+
+                    try {
+                        const res = await fetch('/request-account-deletion', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ fullName, email, reason })
+                        });
+
+                        const data = await res.json();
+
+                        if (!res.ok || !data.success) {
+                            throw new Error(data.message || 'Failed to submit request');
+                        }
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Request Submitted',
+                            text: data.message || 'Your account deletion request has been submitted successfully.'
+                        });
+
+                        form.reset();
+                    } catch (err) {
+                        console.error(err);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: err.message || 'Something went wrong while submitting your request.'
+                        });
+                    } finally {
+                        // Re-enable button & hide spinner
+                        submitBtn.disabled = false;
+                        spinner.classList.add('d-none');
+                        btnText.textContent = 'Submit Deletion Request';
+                    }
+                });
+            });
+        </script>

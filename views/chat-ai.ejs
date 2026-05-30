@@ -1,0 +1,590 @@
+<%- include('partials/header-sidebar') %>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+    <style>
+        /* body {
+        background: linear-gradient(to right, #f8f9fa, #e9ecef);
+      }
+
+      .card {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        border: none;
+      } */
+
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 10000;
+            max-width: 300px;
+        }
+
+        #editor {
+            background-color: #fff;
+        }
+
+        .btn-custom {
+            background-color: #042888;
+            color: white;
+
+        }
+
+        .btn-custom:hover {
+            border: #042888 solid 1px;
+            box-shadow: 0 0 3px #042888, 0 0 1px #042888, 0 0 1px #042888;
+            background-color: white;
+            color: #042888;
+        }
+
+
+
+        /* Basic spinner style */
+        .spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <div class="page-wrapper" id="toTop">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Manage UISTO AI</h4>
+                    <h6>Train UISTO AI to take on any question</h6>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row g-3 mb-3">
+                        <!-- Add New FAQ -->
+                        <div class="col-lg-6 d-flex col-sm-12 col-12">
+                            <div class="card p-4 w-100" style="max-height: 400px; overflow: hidden;">
+                                <h5 class="mb-3">Add New FAQ</h5>
+                                <form id="faqForm" class="d-flex flex-column h-100">
+                                    <div class="mb-3">
+                                        <label for="question" class="form-label">Question</label>
+                                        <textarea class="form-control" id="question" rows="2"
+                                            placeholder="Enter question..."></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="answer" class="form-label">Answer</label>
+                                        <textarea class="form-control" id="answer" rows="4"
+                                            placeholder="Enter answer..."></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-custom mt-auto addFaqBTN">
+                                        <i class="addFaqIcon fas fa-spin me-2"></i>Add FAQ
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Existing FAQs -->
+                        <div class="col-lg-6 d-flex col-sm-12 col-12">
+                            <div class="card p-4 w-100 d-flex flex-column" style="max-height: 400px;">
+                                <h5 class="mb-3" id="numberOfFAQs"><i class="fas fa-spin fa-spinner"
+                                        style="color: #042888;"></i></h5>
+                                <ul class="list-group overflow-auto flex-grow-1" id="faqList" style="min-height: 0;">
+                                    <!-- FAQs will be injected here -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="container my-4 px-0">
+                        <h1 class="text-center">Enter context</h1>
+                        <p class="text-secondary text-center"><i class="fa-solid fa-circle-info me-2"></i>The Context is
+                            a custom block
+                            of
+                            text about your niche that helps fine-tune the chatbot’s responses for better relevance and
+                            accuracy.</p>
+                        <div class="mb-3" id="editor" style="height: 300px;"></div>
+                        <div class="m-auto text-end">
+                            <button type="submit" class="btn btn-custom" id="context-btn"><i
+                                    class="fas fa-spin me-2"></i>Update
+                                Context</button>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+
+            <!-- Edit FAQ Modal -->
+            <div class="modal fade" id="editFAQModal" tabindex="-1" aria-labelledby="editFAQModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editFAQModalLabel">Edit FAQ</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editQuestion" class="form-label">Question</label>
+                                <textarea class="form-control" id="editQuestion" rows="2"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editAnswer" class="form-label">Answer</label>
+                                <textarea class="form-control" id="editAnswer" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                            <button type="button" class="btn btn-custom" id="updateFaq-btn"><i
+                                    class="fas fa-spin me-2 updateFaq-icon"></i>Update FAQ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+        </div>
+    </div>
+    </div>
+
+
+    <%- include("partials/footer") %>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+        <!-- Quill Init -->
+        <!-- Quill Init -->
+        <script>
+            const quill = new Quill('#editor', {
+                theme: 'snow',
+                placeholder: 'Type your context here...',
+                modules: {
+                    toolbar: [
+
+
+                        ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
+
+
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+
+                    ]
+                }
+            });
+        </script>
+        <!-- <script src="assets-loginpage/js/toast.js"></script> -->
+
+        <!-- FAQ Logic -->
+        <script>
+            // Variables for modal and form
+            const faqForm = document.getElementById("faqForm");
+            const faqList = document.getElementById("faqList");
+            const getNumberOfFAQs = document.getElementById("numberOfFAQs");
+            const toastContainer = document.getElementById("toastContainer");
+            const editFAQModal = new bootstrap.Modal(document.getElementById("editFAQModal"));
+
+            const API_BASE_URL = "/api/v1";
+
+
+
+
+            // Fetch FAQ function
+            async function fetchFAQs() {
+                try {
+                    const res = await fetch(`${API_BASE_URL}/faqs`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        }
+                    });
+
+                    const json = await res.json();
+                    const faqs = json.faqs || [];
+
+                    faqList.innerHTML = ""; // clear existing content
+
+                    if (faqs.length === 0) {
+                        getNumberOfFAQs.innerHTML = `<i class="fa-solid fa-circle-info me-2"></i>Number of FAQs in the archive: <span class="text-danger">0</span>`;
+                        faqList.innerHTML = `<li class="list-group-item text-center text-info"><i class="fa-solid fa-circle-info me-2"></i>FAQ List is Empty. Please add some FAQs.</li>`;
+                        return;
+                    }
+
+                    getNumberOfFAQs.innerHTML = `<i class="fa-solid fa-circle-info me-2"></i>Number of FAQs in the archive: <span  style="color: #042888">${faqs.length}</span>`;
+                    faqs.forEach(renderFAQ);
+
+                } catch (error) {
+                    console.error("Error loading FAQs:", error);
+
+                    if (error instanceof TypeError && error.message === "Failed to fetch") {
+                        swal.fire("Network Error", "Network error: Unable to connect to the server", "error");
+                    } else {
+                        swal.fire("Error", "Failed to load FAQs", "error");
+                    }
+
+                }
+            }
+
+
+
+
+            //Adding faq
+            faqForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const questionInput = document.getElementById("question");
+                const answerInput = document.getElementById("answer");
+                const addFaqBTN = document.querySelector(".addFaqBTN")
+                const addFaqIcon = document.querySelector(".addFaqIcon")
+
+                const question = questionInput.value.trim();
+                const answer = answerInput.value.trim();
+
+                if (!question || !answer) {
+                    swal.fire("Warning", "Question or Answer must not be empty!", "warning");
+                    return;
+                }
+
+                try {
+                    // Show spinner icon
+                    addFaqIcon.classList.add("fa-spinner");
+                    addFaqBTN.setAttribute("disabled", true);
+                    const res = await fetch(`${API_BASE_URL}/faqs`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ question, answer })
+                    });
+
+                    const json = await res.json();
+
+
+                    if (!res.ok || !json.success) {
+                        addFaqIcon.classList.remove("fa-spinner");
+                        addFaqBTN.removeAttribute("disabled");
+                        Swal.fire("Error", json.message || "Failed to add FAQ", "error");
+                        return;
+                    }
+
+                    // Instead of relying on json.faq, re-fetch all
+
+                    await fetchFAQs();
+                    Swal.fire("Success", "FAQ added successfully!", "success");
+                    addFaqIcon.classList.remove("fa-spinner");
+                    addFaqBTN.removeAttribute("disabled");
+                    faqForm.reset();
+
+                } catch (error) {
+                    console.error("Error adding FAQ:", error);
+
+                    if (error instanceof TypeError && error.message === "Failed to fetch") {
+                        addFaqIcon.classList.remove("fa-spinner");
+                        addFaqBTN.removeAttribute("disabled");
+                        Swal.fire("Error", "Network error: Unable to connect to the server", "error");
+                    } else {
+                        addFaqIcon.classList.remove("fa-spinner");
+                        addFaqBTN.removeAttribute("disabled");
+                        Swal.fire("Error", "Network error: Unable to connect to the server", "error");
+                    }
+
+                }
+            });
+
+
+            // Encoding the html literals received from the backend to render on the frontend
+            function decodeHTML(html) {
+                const textarea = document.createElement("textarea");
+                textarea.innerHTML = html;
+                return textarea.value;
+            }
+
+
+            // Render FAQ function
+            function renderFAQ(faq) {
+                const li = document.createElement("li");
+                li.className = "list-group-item d-flex justify-content-between align-items-start";
+
+                // Decode HTML entities from DB
+                const decodedQuestion = decodeHTML(faq.question);
+                const decodedAnswer = decodeHTML(faq.answer);
+
+                li.innerHTML = `
+    <div class="ms-2 me-auto">
+      <div class="fw-bold">❓ ${decodedQuestion}</div>
+      ${decodedAnswer}
+    </div>
+    <!-- Edit button with icon -->
+    <button class="btn btn-sm btn-info ms-3" onclick="editFAQ('${faq._id}', \`${decodedQuestion}\`, \`${decodedAnswer}\`)">
+      <i class="fas fa-edit"></i>
+    </button>
+    <!-- Delete button with icon -->
+    <button class="btn btn-sm btn-danger ms-3 delete-btn-icon" onclick="deleteFAQ('${faq._id}', this)">
+      <i class="fas fa-trash"></i>
+    </button>
+  `;
+
+                faqList.appendChild(li);
+            }
+
+
+            // Update (Edit) FAQ function
+            function editFAQ(id, question, answer) {
+                // Prefill the modal with current FAQ's question and answer
+                document.getElementById("editQuestion").value = question;
+                document.getElementById("editAnswer").value = answer;
+                const updateFAQBtn = document.getElementById("updateFaq-btn");
+                const updateFaqIcon = document.querySelector(".updateFaq-icon")
+
+                // Show the modal
+                editFAQModal.show();
+
+                // Handle the update FAQ action inside the modal
+                updateFAQBtn.onclick = async () => {
+                    const updatedQuestion = document.getElementById("editQuestion").value.trim();
+                    const updatedAnswer = document.getElementById("editAnswer").value.trim();
+                    // alert("values gotten")
+
+                    if (!updatedQuestion || !updatedAnswer) {
+                        Swal.fire("Warning", "Question and Answer are required", "warning");
+                        return;
+                    }
+
+                    try {
+                        // Show spinner icon
+                        updateFaqIcon.classList.add("fa-spinner");
+                        updateFAQBtn.setAttribute("disabled", true);
+                        const res = await fetch(`${API_BASE_URL}/faqs/${id}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ question: updatedQuestion, answer: updatedAnswer })
+                        });
+
+                        const updatedFAQ = await res.json();
+
+
+                        if (!res.ok || !updatedFAQ.success) {
+                            updateFaqIcon.classList.remove("fa-spinner");
+                            updateFAQBtn.removeAttribute("disabled");
+
+                            Swal.fire("Error", updatedFAQ.message || "Failed to update FAQ", "error");
+                            return;
+                        }
+
+                        // Instead of relying on json.faq, re-fetch all
+                        await fetchFAQs()
+
+                        updateFaqIcon.classList.remove("fa-spinner");
+                        updateFAQBtn.removeAttribute("disabled");
+
+                        editFAQModal.hide(); // Close the modal
+                        Swal.fire("Success", "FAQ updated successfully!", "success");
+
+
+                        // Close the modal
+
+                    } catch (error) {
+                        console.error("Error updating FAQ:", error);
+
+                        if (error instanceof TypeError && error.message === "Failed to fetch") {
+                            updateFaqIcon.classList.remove("fa-spinner");
+                            updateFAQBtn.removeAttribute("disabled");
+
+                            Swal.fire("Error", "Network error: Unable to connect to the server", "error");
+                        } else {
+                            updateFaqIcon.classList.remove("fa-spinner");
+                            updateFAQBtn.removeAttribute("disabled");
+                            Swal.fire("Error", "Failed to update FAQ", "error");
+                        }
+
+                    }
+                };
+            }
+
+
+
+            // Delete FAQ function
+            async function deleteFAQ(id, btn) {
+                btn.innerHTML = `<i class="fas fa-spin fa-spinner"></i>`
+                try {
+                    const res = await fetch(`${API_BASE_URL}/faqs/${id}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                    });
+
+
+                    if (res.ok) {
+
+                        btn.closest("li").remove();
+                        Swal.fire("Success", "FAQ deleted successfully!", "success");
+                        await fetchFAQs(); // Refresh the FAQ list
+
+                    } else {
+                        btn.innerHTML = `<i class="fas fa-trash"></i>`
+                        Swal.fire("Error", "Failed to delete FAQ", "error");
+                    }
+                } catch (error) {
+                    console.error("Error deleting FAQ:", error);
+                    btn.innerHTML = `<i class="fas fa-trash"></i>`
+                    if (error instanceof TypeError && error.message === "Failed to fetch") {
+                        Swal.fire("Error", "Network error: Unable to connect to the server", "error");
+                    } else {
+                        Swal.fire("Error", "Error deleting FAQ", "error");
+                    }
+
+                }
+            }
+
+
+
+
+            // Select the button and add event listener
+            document.getElementById("context-btn").addEventListener("click", async () => {
+                const context = document.querySelector(".ql-editor").innerHTML; // Get the content from the Quill editor
+                const contextBtn = document.getElementById("context-btn")
+                const contextBtnIcon = document.querySelector('#context-btn > i')
+
+
+                console.log("The context, FE is: ", context)
+                if (!context.trim() || context === "<br>") {
+                    Swal.fire("Warning", "Context cannot be empty", "warning");
+                    return;
+                }
+
+                try {
+                    contextBtnIcon.classList.add("fa-spinner");
+                    contextBtn.setAttribute("disabled", true);
+                    const res = await fetch(`${API_BASE_URL}/context`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ context }), // Send the context to the backend
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok || !data.success) {
+                        contextBtnIcon.classList.remove("fa-spinner");
+                        contextBtn.removeAttribute("disabled");
+                        throw new Error(data.message || "Network Error");
+                    }
+
+
+                    contextBtnIcon.classList.remove("fa-spinner");
+                    contextBtn.removeAttribute("disabled");
+                    Swal.fire("Success", data.message || "Context updated successfully!", "success");
+
+                    // Update the quill (context area)
+                    await fetchContext()
+
+
+                } catch (error) {
+                    console.error("Error updating context:", error);
+
+                    if (error instanceof TypeError && error.message === "Failed to fetch") {
+                        contextBtnIcon.classList.remove("fa-spinner");
+                        contextBtn.removeAttribute("disabled");
+                        showToast("Network error: Unable to connect to the server", "danger");
+                        Swal.fire("Error", "Network error: Unable to connect to the server", "error");
+                    } else {
+                        contextBtnIcon.classList.remove("fa-spinner");
+                        contextBtn.removeAttribute("disabled");
+                        Swal.fire("Error", error.message || "Failed to update context", "error");
+                    }
+                }
+            });
+
+
+
+            //Fetch context
+            async function fetchContext() {
+                const contextEl = document.querySelector(".ql-editor")
+                try {
+                    const res = await fetch(`${API_BASE_URL}/context`, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        throw new Error("Network Error");
+                    }
+
+                    if (!data.success) {
+                        // showToast(data.message || "Failed to fetch context", "danger");
+                        return;
+                    }
+
+                    if (res.status === 404  ) {
+                        contextEl.innerHTML = `<i class="fa-solid fa-circle-info me-2"></i>You do not have a context. Please add a context.`;
+                        return;
+                    }
+
+                    contextEl.innerHTML = data.context || `<i class="fa-solid fa-circle-info me-2"></i>You do not have a context. Please add a context.`;
+
+
+                } catch (error) {
+                    console.error("Error updating context:", error);
+
+                    if (error instanceof TypeError && error.message === "Failed to fetch") {
+                        swal.fire("Error", "Network error: Unable to connect to the server", "error");
+                    } else {
+                        Swal.fire("Error", "Error fetching context", "error");
+                    }
+                }
+            }
+
+
+
+            // Initialize the page with fetched FAQs and fetchContext
+
+            document.addEventListener("DOMContentLoaded", async () => {
+                await fetchFAQs();
+                await fetchContext();
+
+            })
+
+        </script>
+
+
+
+
+
+
+        </body>
+
+        </html>

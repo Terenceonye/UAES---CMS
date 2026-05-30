@@ -1,0 +1,207 @@
+<%- include("websitepartials/header") %>
+<main class="main">
+  <style>
+    .card-title {
+      color: var(--accent-color);
+    }
+
+    .g-studies-box {
+      width: 200px;
+      height: 200px;
+      overflow: hidden;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f8f9fa;
+      margin: auto;
+      /* optional background */
+    }
+
+    .g-studies-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+
+  <!-- Page Title -->
+  <div
+    class="page-title dark-background"
+    style="
+      background-image: url(website-assets/img/gallery/Dr-Basilia-Igbokwe3.jpg);
+    "
+  >
+    <div class="container position-relative">
+      <h1>Center for Gender Studies</h1>
+      <p>
+        Promoting gender equality, inclusiveness, and empowerment through
+        research, education, and advocacy at the University of Innovation,
+        Science and Technology, Omuma.
+      </p>
+
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li class="current">Directorates</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <!-- End Page Title -->
+
+  <section class="bg-light py-5" id="gender-studies">
+    <div class="container">
+      <div class="g-studies-box">
+        <img
+          src="website-assets/img/school-images/gender-studies-logo.png"
+          alt="gender-studies"
+          class="rounded-circle"
+        />
+      </div>
+
+      <h2 class="text-center mb-4">
+        <i class="fas fa-venus-mars me-2 text-primary"></i>Center for Gender
+        Studies
+      </h2>
+
+      <div class="row">
+        <!-- About Us -->
+        <div class="col-lg-8 mb-4">
+          <div
+            class="p-4 rounded shadow-sm bg-white h-100 animate__animated animate__fadeInLeft"
+          >
+            <h4 class="mb-3 card-title">
+              <i class="fas fa-info-circle text-secondary me-2"></i>About Us
+            </h4>
+            <p>
+              The Center for Gender Studies in the University of Innovation,
+              Science and Technology, Omuma Owerri crystallized after management
+              aligned with national policy in gender mainstreaming in all
+              institutions.
+            </p>
+            <p>
+              The CGS is committed to ensuring gender balance in the campus
+              environment from enrolment to employment. The CGS is the presenter
+              of incisive workshops and publisher of the
+              <strong>ENGENDER</strong>
+              multi-disciplinary journal and proposes to admit studies in the
+              near future for certificate courses.
+            </p>
+          </div>
+        </div>
+
+        <!-- Documentation -->
+        <div class="col-lg-4 mb-4">
+          <div
+            class="p-4 rounded shadow-sm bg-white h-100 animate__animated animate__fadeInRight"
+          >
+            <h4 class="mb-3">
+              <i class="fas fa-file-alt text-secondary me-2"></i>Documentation
+            </h4>
+            <ul class="list-unstyled">
+              <!-- Item 1 -->
+              <li class="mb-3">
+                <a
+                  href="path/to/Nigerian-Gender-Policy.pdf"
+                  class="d-flex align-items-center text-decoration-none"
+                >
+                  <div class="me-3">
+                    <i class="fas fa-download text-danger fa-lg"></i>
+                  </div>
+                  <div class="flex-grow-1">Nigerian National Gender Policy</div>
+                </a>
+              </li>
+
+              <!-- Item 2 -->
+              <li class="mb-3">
+                <a
+                  href="path/to/Gender-Bill-2020.pdf"
+                  class="d-flex align-items-center text-decoration-none"
+                >
+                  <div class="me-3">
+                    <i class="fas fa-download text-danger fa-lg"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    Gender and Equal Opportunities Bill 2020
+                  </div>
+                </a>
+              </li>
+
+              <!-- Item 3 -->
+              <li class="mb-3">
+                <a
+                  href="path/to/Gender-Calendar.pdf"
+                  class="d-flex align-items-center text-decoration-none"
+                >
+                  <div class="me-3">
+                    <i class="fas fa-download text-danger fa-lg"></i>
+                  </div>
+                  <div class="flex-grow-1">Gender Activities Calendar</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming Events -->
+      <div class="row mt-5">
+        <div class="col-12">
+          <h4 class="mb-4 text-center">
+            <i class="fas fa-calendar-alt text-primary me-2"></i>Upcoming Events
+          </h4>
+        </div>
+
+        <!-- Event Card -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm animate__animated animate__fadeInUp">
+            <img
+              src="website-assets/img/events/event1.jpg"
+              class="card-img-top"
+              alt="International Women’s Day 2025"
+            />
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">International Women’s Day 2025</h5>
+              <p class="card-text small text-muted">
+                Public lecture presented during IWD 2025, addressing gender
+                equity and empowerment in academic institutions.
+              </p>
+              <a
+                href="website-assets/img/events/lecture.pdf"
+                class="btn btn-outline-primary mt-auto"
+              >
+                <i class="fas fa-file-download me-2"></i>Download Lecture PDF
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm animate__animated animate__fadeInUp">
+            <img
+              src="website-assets/img/events/event2.jpg"
+              class="card-img-top"
+              alt="Another Event"
+            />
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">Another Upcoming Event</h5>
+              <p class="card-text small text-muted">
+                Short description of the event highlighting its purpose and
+                significance.
+              </p>
+              <a
+                href="javascript:void(0)"
+                class="btn btn-outline-primary mt-auto"
+              >
+                <i class="fas fa-file-download me-2"></i>View Details
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include("websitepartials/footer") %>

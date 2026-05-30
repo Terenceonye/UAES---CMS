@@ -1,0 +1,555 @@
+<%- include("websitepartials/header") %>
+  <main class="main">
+
+    <style>
+      .category-card {
+        cursor: pointer;
+      }
+
+      .category-card.active {
+        border: 2px solid #0d6efd;
+        background-color: #e9f3ff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+
+      .info-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: left;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease;
+        border: 1px solid #ccc;
+      }
+
+      .info-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .icon-box {
+        font-size: 2rem;
+        color: #0d6efd;
+        margin-bottom: 15px;
+      }
+
+      .faculty--staff .departments-nav .nav-tabs .nav-item {
+
+        width: fit-content;
+        color: #0d6efd;
+      }
+
+      .faculty--staff .departments-nav .nav-tabs .nav-item button {
+        color: #0d6efd;
+      }
+
+
+      h5 {
+        color: #0d6efd;
+      }
+    </style>
+
+    <!-- Page Title -->
+    <div class="page-title dark-background"
+      style="background-image: url(website-assets/img/gallery/Dr-Basilia-Igbokwe3.jpg);">
+      <div class="container position-relative">
+        <h1>Schools and Staff</h1>
+        <p>Explore the diverse faculties that make up our institution and the dedicated staff behind them. Each school
+          is driven by passionate professionals committed to academic excellence, innovation, and student success.</p>
+
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="/">Academics</a></li>
+            <li class="current">Schools and Staff</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+
+
+    <section id="academic-schools" class="students-life section">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="students-life-banner" data-aos="zoom-in" data-aos-delay="200">
+          <div class="banner-content" data-aos="fade-right" data-aos-delay="300">
+            <h2>Explore Our Academic Schools</h2>
+            <p>Discover the various academic schools shaping the future of students at Federal Polytechnic, Nekede.</p>
+          </div>
+          <img src="website-assets/img/gallery/Rector-Building-scaled.jpg" alt=" Academic Schools" class="img-fluid">
+        </div>
+
+        <div class="life-categories mt-5" data-aos="fade-up" data-aos-delay="200">
+          <div class="row g-4" id="school-cards-container">
+            <!-- Cards will be inserted here via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+
+    <!-- Faculty  Staff Section -->
+    <section id="faculty--staff" class="faculty--staff section d-none">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+
+
+        <div class="row">
+          <div class="col-lg-12" data-aos="fade-up" data-aos-delay="300">
+            <div class="departments-nav">
+              <h4 class="departments-title">Departments</h4>
+              <ul class="nav nav-tabs flex-row">
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#faculty--staff-tab-1">Computer
+                    Science</button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab"
+                    data-bs-target="#faculty--staff-tab-2">Mathematics</button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#faculty--staff-tab-3">Physics</button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#faculty--staff-tab-4">Biology</button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab"
+                    data-bs-target="#faculty--staff-tab-5">Chemistry</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-12" data-aos="fade-up" data-aos-delay="400">
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="faculty--staff-tab-1">
+                <!-- Department Info Section -->
+                <div class="department-info mb-4">
+                  <h3 class="mb-3">About the Department of Computer Science</h3>
+                  <p class="mb-4">Learn about our mission, academic programs, and research focus</p>
+
+                  <div class="row g-4">
+
+                    <!-- Structure Card -->
+                    <div class="col-md-6">
+                      <div class="info-card h-100">
+                        <div class="icon-box">
+                          <i class="bi bi-diagram-3-fill"></i>
+                        </div>
+                        <h5>Department Structure</h5>
+                        <p>The department includes divisions such as Software Engineering, AI, Cybersecurity, and Data
+                          Science, coordinated by unit heads reporting to the HoD.</p>
+                      </div>
+                    </div>
+
+                    <!-- Mission Card -->
+                    <div class="col-md-6">
+                      <div class="info-card h-100">
+                        <div class="icon-box">
+                          <i class="bi bi-bullseye"></i>
+                        </div>
+                        <h5>Our Mission</h5>
+                        <p>To foster innovation and excellence in computing education and research for global impact.
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Academic Programs Card -->
+                    <div class="col-md-6">
+                      <div class="info-card h-100">
+                        <div class="icon-box">
+                          <i class="bi bi-mortarboard-fill"></i>
+                        </div>
+                        <h5>Academic Programs</h5>
+                        <p>
+                          B.Sc. in Computer Science<br>
+                          B.Sc. in Cybersecurity<br>
+                          M.Sc. in AI<br>
+                          Ph.D. in Computer Science
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Research Focus Card -->
+                    <div class="col-md-6">
+                      <div class="info-card h-100">
+                        <div class="icon-box">
+                          <i class="bi bi-lightbulb-fill"></i>
+                        </div>
+                        <h5>Research Focus</h5>
+                        <p>
+                          AI in Healthcare<br>
+                          Cybersecurity & Privacy<br>
+                          Blockchain in Education<br>
+                          IoT & Smart Cities
+                        </p>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+
+                <div class="row my-3">
+                  <div class="col-lg-8 mx-auto">
+                    <div class="search-container" data-aos="fade-up" data-aos-delay="200">
+                      <div class="input-group">
+                        <input type="text" class="form-control"
+                          placeholder="Search faculty &amp; staff by name, department, or expertise...">
+                        <button class="btn search-btn" type="button"><i class="bi bi-search"></i></button>
+                      </div>
+                      <div class="filters mt-3">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="facultyFilter" checked="">
+                          <label class="form-check-label" for="facultyFilter">Name</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="researchFilter" checked="">
+                          <label class="form-check-label" for="researchFilter">Research Title</label>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+                <div class="row g-4">
+                  <div class="col-md-6 col-lg-3">
+                    <div class="faculty-card">
+                      <div class="faculty-image">
+                        <img src="website-assets/img/person/avatar.png" class="" alt="Faculty Member">
+                      </div>
+                      <div class="faculty-info">
+                        <h4>Dr. Jonathan Baker</h4>
+                        <p class="faculty-title">Department Chair, Professor</p>
+                        <div class="faculty-specialties">
+                          <span>Artificial Intelligence</span>
+                          <span>Machine Learning</span>
+                        </div>
+                        <div class="faculty-contact">
+                          <a href="mailto:jbaker@example.com"><i class="bi bi-envelope"></i> Email</a>
+                          <a href="/profile" class="profile-link"><i class="bi bi-person"></i> Profile</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 col-lg-3">
+                    <div class="faculty-card">
+                      <div class="faculty-image">
+                        <img src="website-assets/img/person/avatar.png" class="img-fluid" alt="Faculty Member">
+                      </div>
+                      <div class="faculty-info">
+                        <h4>Dr. Sarah Wilson</h4>
+                        <p class="faculty-title">Associate Professor</p>
+                        <div class="faculty-specialties">
+                          <span>Data Science</span>
+                          <span>Neural Networks</span>
+                        </div>
+                        <div class="faculty-contact">
+                          <a href="mailto:swilson@example.com"><i class="bi bi-envelope"></i> Email</a>
+                          <a href="/profile" class="profile-link"><i class="bi bi-person"></i> Profile</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="faculty--staff-tab-2">
+                <div class="department-info mb-4">
+                  <h3>Mathematics Department</h3>
+                  <p>Curabitur a felis in nunc fringilla tristique. Fusce egestas elit eget lorem. Etiam vitae tortor.
+                    Nam at tortor in tellus interdum sagittis.</p>
+                </div>
+                <div class="row g-4">
+                  <div class="col-md-6 col-lg-3">
+                    <div class="faculty-card">
+                      <div class="faculty-image">
+                        <img src="website-assets/img/person/avatar.png" class="img-fluid" alt="Faculty Member">
+                      </div>
+                      <div class="faculty-info">
+                        <h4>Dr. Patricia Lee</h4>
+                        <p class="faculty-title">Department Chair, Professor</p>
+                        <div class="faculty-specialties">
+                          <span>Algebraic Topology</span>
+                          <span>Number Theory</span>
+                        </div>
+                        <div class="faculty-contact">
+                          <a href="mailto:plee@example.com"><i class="bi bi-envelope"></i> Email</a>
+                          <a href="/profile" class="profile-link"><i class="bi bi-person"></i> Profile</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="faculty--staff-tab-3">
+                <div class="department-info mb-4">
+                  <h3>Physics Department</h3>
+                  <p>Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Phasellus nec sem in justo
+                    pellentesque facilisis. Etiam imperdiet imperdiet orci.</p>
+                </div>
+                <div class="row g-4">
+                  <div class="col-md-6 col-lg-3">
+                    <div class="faculty-card">
+                      <div class="faculty-image">
+                        <img src="website-assets/img/person/avatar.png" class="img-fluid" alt="Faculty Member">
+                      </div>
+                      <div class="faculty-info">
+                        <h4>Dr. Neil Armstrong</h4>
+                        <p class="faculty-title">Department Chair, Professor</p>
+                        <div class="faculty-specialties">
+                          <span>Quantum Physics</span>
+                          <span>Astrophysics</span>
+                        </div>
+                        <div class="faculty-contact">
+                          <a href="mailto:narmstrong@example.com"><i class="bi bi-envelope"></i> Email</a>
+                          <a href="/profile" class="profile-link"><i class="bi bi-person"></i> Profile</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Faculty  Staff Section -->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        fetch("/api/schools")
+          .then(res => res.json())
+          .then(response => {
+            const schools = response.data;
+            const container = document.getElementById("school-cards-container");
+
+            if (!Array.isArray(schools) || schools.length === 0) {
+              container.innerHTML = "<p>No schools available at the moment.</p>";
+              return;
+            }
+
+            schools.forEach((school, index) => {
+              const delay = 100 + index * 100;
+
+              const col = document.createElement("div");
+              col.className = "col-md-3 col-sm-6";
+              col.setAttribute("data-aos", "fade-up");
+              col.setAttribute("data-aos-delay", delay.toString());
+
+              const card = document.createElement("div");
+              card.className = "category-card";
+              card.setAttribute("data-schoolid", school._id);
+              card.innerHTML = `
+            <div class="icon-container">
+              <i class="bi bi-building"></i>
+            </div>
+            <h4>${school.name}</h4>
+            <p>${school.description || "Shaping the future."}</p>
+          `;
+
+              // 💡 Click listener to show the faculty section and scroll to it
+              card.addEventListener("click", () => {
+                // Remove 'active' from all
+                document.querySelectorAll(".category-card").forEach(c => c.classList.remove("active"));
+
+                // Add 'active' to this one
+                card.classList.add("active");
+
+                // Show the next section
+                const target = document.getElementById("faculty--staff");
+                if (target) {
+                  target.classList.remove("d-none");
+                  target.scrollIntoView({ behavior: "smooth" });
+                }
+
+
+                // Fetch faculties and staff for the selected school
+                fetch(`/api/departments?schoolId=${school._id}`)
+                  .then(res => res.json())
+                  .then(response => {
+                    const data = response.data;
+
+                    // Populate department tabs and faculty cards dynamically
+                    populateFacultyStaff(data);
+                    console.log(data)
+                  })
+                  .catch(error => {
+                    console.error("Error fetching faculty and staff:", error);
+                    const target = document.getElementById("faculty--staff");
+                    target.innerHTML += "<p class='text-danger'>Failed to load faculty and staff data.</p>";
+                  });
+
+
+              });
+
+              col.appendChild(card);
+              container.appendChild(col);
+            });
+          })
+          .catch(error => {
+            console.error("Error fetching schools:", error);
+            document.getElementById("school-cards-container").innerHTML =
+              "<p>Failed to load schools. Please try again later.</p>";
+          });
+      });
+
+
+      async function populateFacultyStaff(data) {
+        const tabNav = document.querySelector(".departments-nav .nav");
+        const tabContent = document.querySelector(".tab-content");
+
+        tabNav.innerHTML = "";
+        tabContent.innerHTML = "";
+
+        // ✅ Validate early
+        if (!data || !Array.isArray(data)) {
+          console.error("Invalid faculty-staff data format:", data);
+          tabContent.innerHTML = `<p class="text-danger">No departments found.</p>`;
+          return;
+        }
+
+        for (let index = 0; index < data.length; index++) {
+          const dept = data[index];
+          const isActive = index === 0 ? "active" : "";
+          const showActive = index === 0 ? "show active" : "";
+          const tabId = `faculty--staff-tab-${index + 1}`;
+
+          // ----- TAB BUTTON -----
+          const tabBtn = document.createElement("li");
+          tabBtn.className = "nav-item";
+          tabBtn.innerHTML = `
+      <button class="nav-link ${isActive}" data-bs-toggle="tab" data-bs-target="#${tabId}">
+        ${dept.name}
+      </button>
+    `;
+          tabNav.appendChild(tabBtn);
+
+          // ----- TAB CONTENT -----
+          const tabPane = document.createElement("div");
+          tabPane.className = `tab-pane fade ${showActive}`;
+          tabPane.id = tabId;
+
+          const structure = dept.structure || "Structure details coming soon.";
+          const mission = dept.mission || "Our mission will be updated shortly.";
+          const researchItems = (dept.researchFocus || [])
+            .map(item => `<div>${item}</div>`)
+            .join("");
+
+          // ----- Fetch Staff for This Department -----
+          let staff = [];
+          try {
+            const response = await fetch(`/api/staff?id=${dept._id}&onlystaff=true`);
+            const result = await response.json();
+            if (result.success && Array.isArray(result.data)) {
+              staff = result.data;
+            } else {
+              console.warn(`Unexpected staff format for "${dept.name}":`, result);
+            }
+          } catch (err) {
+            console.error(`Error fetching staff for department "${dept.name}":`, err);
+          }
+
+          const facultyList = staff.length > 0
+            ? staff.map(member => `
+        <div class="col-md-6 col-lg-3">
+          <div class="faculty-card">
+            <div class="faculty-image">
+              <img src="${member.profileImage?.url || 'website-assets/img/person/avatar.png'}" class="img-fluid" alt="Faculty Member">
+            </div>
+            <div class="faculty-info">
+              <h4>${member.fullName}</h4>
+              <p class="faculty-title">${member.position || ""}</p>
+              <div class="faculty-specialties">
+                ${(member.specialization || []).map(s => `<span>${s}</span>`).join("")}
+              </div>
+              <div class="faculty-contact">
+                <a href="mailto:${member.email}"><i class="bi bi-envelope"></i> Email</a>
+                <a href="/profile?id=${member._id}" class="profile-link"><i class="bi bi-person"></i> Profile</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join("")
+            : `<div class="col-12"><p>No staff members available for this department yet.</p></div>`;
+
+          const deptInfo = `
+      <div class="department-info mb-4">
+        <h3 class="mb-3">About the ${dept.name}</h3>
+        <p class="mb-4">Learn about our mission, academic programs, and research focus</p>
+
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="info-card h-100">
+              <div class="icon-box"><i class="bi bi-diagram-3-fill"></i></div>
+              <h5>Department Structure</h5>
+              <p>${structure}</p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="info-card h-100">
+              <div class="icon-box"><i class="bi bi-bullseye"></i></div>
+              <h5>Our Mission</h5>
+              <p>${mission}</p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="info-card h-100">
+              <div class="icon-box"><i class="bi bi-mortarboard-fill"></i></div>
+              <h5>Academic Programs</h5>
+              <p>Details coming soon...</p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="info-card h-100">
+              <div class="icon-box"><i class="bi bi-lightbulb-fill"></i></div>
+              <h5>Research Focus</h5>
+              <p>${researchItems}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        ${facultyList}
+      </div>
+    `;
+
+          tabPane.innerHTML = deptInfo;
+          tabContent.appendChild(tabPane);
+        }
+      }
+
+    </script>
+
+
+  </main>
+
+  <%- include("websitepartials/footer") %>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Image Upload & Face Detection</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .upload-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px 40px 40px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            user-select: none;
+        }
+
+        .upload-card h2 {
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #222;
+        }
+
+        #profileImage {
+            display: none;
+        }
+
+        label[for="profileImage"] {
+            display: inline-block;
+            background-color: #4a90e2;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, opacity 0.3s ease, cursor 0.3s ease;
+            box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+            user-select: none;
+        }
+
+        label[for="profileImage"]:hover {
+            background-color: #357ABD;
+        }
+
+        label[for="profileImage"].disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: #4a90e2;
+        }
+
+        #image-container {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin: 30px auto 0;
+            border-radius: 50%;
+            border: 5px solid #4a90e2;
+            overflow: hidden;
+            background: #e0e7ff;
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.25);
+        }
+
+        #preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 50%;
+        }
+
+        canvas {
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-weight: 600;
+            color: #444;
+            min-height: 24px;
+            transition: color 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .upload-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px 40px 40px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            user-select: none;
+        }
+
+        .upload-card h2 {
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #222;
+        }
+
+        #profileImage {
+            display: none;
+        }
+
+        label[for="profileImage"] {
+            display: inline-block;
+            background-color: #4a90e2;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, opacity 0.3s ease, cursor 0.3s ease;
+            box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+            user-select: none;
+        }
+
+        label[for="profileImage"]:hover {
+            background-color: #357ABD;
+        }
+
+        label[for="profileImage"].disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: #4a90e2;
+        }
+
+        #image-container {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin: 30px auto 0;
+            border-radius: 50%;
+            border: 5px solid #4a90e2;
+            overflow: hidden;
+            background: #e0e7ff;
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.25);
+        }
+
+        #preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 50%;
+        }
+
+        canvas {
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-weight: 600;
+            color: #444;
+            min-height: 24px;
+            transition: color 0.3s ease;
+        }
+    </style>
+
+
+    <div class="upload-card">
+        <h2>Upload Profile Picture</h2>
+
+        <label for="profileImage" id="uploadLabel">Choose Image</label>
+        <input type="file" id="profileImage" name="profileImage" accept="image/*" />
+
+        <div id="image-container">
+            <img id="preview" src="passport-photo.png" alt="Profile Preview" />
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        const messageEl = document.getElementById('message');
+        const label = document.getElementById('uploadLabel');
+        const preview = document.getElementById('preview');
+        const container = document.getElementById('image-container');
+
+        async function loadModels() {
+            const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
+            await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+            await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+            await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+        }
+
+        async function detectFace(imageElement) {
+            if (imageElement.src.includes('passport-photo.png')) return; // Skip detection for default
+
+            preview.style.opacity = '0';
+            messageEl.textContent = 'Detecting faces...';
+            messageEl.style.color = '#357ABD'
+
+            const oldCanvas = container.querySelector('canvas');
+            if (oldCanvas) container.removeChild(oldCanvas);
+
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            const canvas = faceapi.createCanvasFromMedia(imageElement);
+            canvas.style.position = 'absolute';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.borderRadius = '50%';
+            container.appendChild(canvas);
+
+            const displaySize = { width: preview.width, height: preview.height };
+            faceapi.matchDimensions(canvas, displaySize);
+
+            const detections = await faceapi
+                .detectAllFaces(preview, new faceapi.TinyFaceDetectorOptions())
+                .withFaceLandmarks();
+
+            const resizedDetections = faceapi.resizeResults(detections, displaySize);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            faceapi.draw.drawDetections(canvas, resizedDetections);
+
+            if (resizedDetections.length === 1) {
+                messageEl.style.color = '#28a745';
+                messageEl.textContent = `Face detected (${resizedDetections.length})`;
+            } else if (resizedDetections.length > 1) {
+                messageEl.style.color = 'orange';
+                messageEl.textContent = `Multiple faces detected (${resizedDetections.length})`;
+            } else {
+                messageEl.style.color = '#dc3545';
+                messageEl.textContent = 'No face detected. Try another image.';
+            }
+
+            preview.style.opacity = '1';
+        }
+
+        async function handleprofileImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const fileError = [];
+
+            if (file.size > 1024 * 250) {
+                fileError.push('File size must be at most 250KB.');
+            }
+
+            const acceptableFileTypes = ['image/jpg', 'image/png', 'image/jpeg'];
+            if (!acceptableFileTypes.includes(file.type)) {
+                fileError.push('Only a .jpg or .png image is supported.');
+            }
+
+            if (fileError.length > 0) {
+                messageEl.style.color = '#dc3545';
+                messageEl.innerHTML = fileError.join('<br>');
+                setTimeout(() => { messageEl.innerHTML = ''; }, 5000);
+                return;
+            }
+
+            label.style.pointerEvents = 'none';
+            label.classList.add('disabled');
+
+            preview.src = URL.createObjectURL(file);
+
+            preview.onload = async () => {
+                await detectFace(preview);
+                URL.revokeObjectURL(preview.src);
+                label.style.pointerEvents = 'auto';
+                label.classList.remove('disabled');
+            };
+        }
+
+        window.onload = async () => {
+            await loadModels();
+            document.getElementById('profileImage').addEventListener('change', handleprofileImage);
+        };
+    </script>
+</body>
+
+</html>

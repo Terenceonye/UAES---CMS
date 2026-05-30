@@ -1,0 +1,154 @@
+<%- include('partials/header-sidebar') %>
+
+    <div class="page-wrapper" id="toTop">
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h4>Manage Events</h4>
+                    <h6>Update this Event</h6>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Title -->
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="eventTitle">Event Title</label>
+                                <input type="text" id="eventTitle" class="form-control" placeholder="Enter Event Title"
+                                    value="<%= event.title %>">
+                            </div>
+                        </div>
+
+                        <!-- Date -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="eventDate">Date</label>
+                                <input type="date" id="eventDate" class="form-control"
+                                    value="<%= event.date.toISOString().split('T')[0] %>">
+                            </div>
+                        </div>
+
+                        <!-- Start Time -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="startTime">Start Time</label>
+                                <input type="time" id="startTime" class="form-control" value="<%= event.startTime %>">
+                            </div>
+                        </div>
+
+                        <!-- End Time -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="endTime">End Time</label>
+                                <input type="time" id="endTime" class="form-control" value="<%= event.endTime %>">
+                            </div>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="eventLocation">Location</label>
+                                <input type="text" id="eventLocation" class="form-control"
+                                    placeholder="Enter Event Location" value="<%= event.location %>">
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="eventDescription">Description</label>
+                                <textarea id="eventDescription" class="form-control"
+                                    placeholder="Enter Event Description"><%= event.description %></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Hidden Event ID -->
+                        <input type="hidden" id="eventId" name="eventId" value="<%= event._id %>">
+
+                        <!-- Submit Button -->
+                        <div class="col-lg-12">
+                            <button id="updateEventBtn" class="btn btn-submit me-2">
+                                <span class="btn-text">Update Event</span>
+                                <span class="spinner-border spinner-border-sm d-none" role="status"
+                                    aria-hidden="true"></span>
+                            </button>
+
+                            <button id="cancelUpdateBtn" onclick="window.back()" class="btn btn-cancel me-2">
+                                <span class="btn-text"><i class="fas fa-arrow-left me-2"></i>Go Back</span>
+
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include("partials/footer") %>
+
+
+        <script>
+            document.getElementById('updateEventBtn').addEventListener('click', async function () {
+                const btn = this;
+                const btnText = btn.querySelector('.btn-text');
+                const spinner = btn.querySelector('.spinner-border');
+
+                // Show loader
+                btn.disabled = true;
+                btnText.textContent = 'Saving...';
+                spinner.classList.remove('d-none');
+
+                // Collect form values
+                const eventId = document.getElementById('eventId').value.trim();
+                const title = document.getElementById('eventTitle').value.trim();
+                const date = document.getElementById('eventDate').value;
+                const startTime = document.getElementById('startTime').value;
+                const endTime = document.getElementById('endTime').value;
+                const location = document.getElementById('eventLocation').value.trim();
+                const description = document.getElementById('eventDescription').value.trim();
+
+                // Validation
+                if (!title || !date || !startTime || !endTime || !location || !description) {
+                    Swal.fire("Incomplete Form", "Please fill in all the fields before submitting.", "warning");
+                    btn.disabled = false;
+                    btnText.textContent = 'Update Event';
+                    spinner.classList.add('d-none');
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/api/events/${eventId}`, {
+                        method: 'PUT',
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ title, date, startTime, endTime, location, description })
+                    });
+
+                    const result = await res.json();
+
+                    if (!res.ok) {
+                        return Swal.fire("Error", result.message || "Failed to update event.", "error");
+                    }
+
+                    Swal.fire("Success", result.message || "Event updated successfully.", "success");
+                    // Optionally redirect or clear form
+
+                    setTimeout(() => {
+                        window.location.href = '/view-all-events'; // Redirect to events list
+                    }, 1000);
+
+                } catch (error) {
+                    console.error(error);
+                    Swal.fire("Server Error", "Something went wrong. Please try again later.", "error");
+                } finally {
+                    btn.disabled = false;
+                    btnText.textContent = 'Update Event';
+                    spinner.classList.add('d-none');
+                }
+            });
+        </script>

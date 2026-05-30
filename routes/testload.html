@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tom Select with Preselected Options</title>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <h3>Select Fruits</h3>
+    <select id="fruit-select" multiple placeholder="Select fruits..."></select>
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        // Simulated API response
+        const apiResponse = {
+            options: [
+                { value: 'apple', text: 'Apple' },
+                { value: 'banana', text: 'Banana' },
+                { value: 'orange', text: 'Orange' },
+                { value: 'grape', text: 'Grape' },
+                { value: 'mango', text: 'Mango' }
+            ],
+            selectedValues: ['banana', 'mango']
+        };
+
+        // Reference to select element
+        const select = document.getElementById('fruit-select');
+
+        // Populate the select element
+        apiResponse.options.forEach(opt => {
+            const option = document.createElement('option');
+            option.value = opt.value;
+            option.text = opt.text;
+            // Preselect if in selectedValues
+            if (apiResponse.selectedValues.includes(opt.value)) {
+                option.selected = true;
+            }
+            select.appendChild(option);
+        });
+
+        // Initialize Tom Select
+        new TomSelect('#fruit-select', {
+            plugins: ['remove_button'],
+            persist: false,
+            create: false
+        });
+    </script>
+</body>
+
+</html>
